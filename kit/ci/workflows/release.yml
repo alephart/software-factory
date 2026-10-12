@@ -1,0 +1,47 @@
+name: Release
+
+# Si hay changesets pendientes en __PROD_BRANCH__, abre/actualiza un PR "chore: version
+# packages" con el bump de package.json + CHANGELOG.md de cada app (vía
+# `pnpm changeset version`). Si no hay changesets pendientes, no hace nada.
+# Nunca publica a npm — todos los paquetes son privados (access: restricted).
+
+on:
+  push:
+    branches:
+      - __PROD_BRANCH__
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create version PR
+        uses: changesets/action@v1
+        with:
+          title: "chore: version packages"
+          commit: "chore: version packages"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

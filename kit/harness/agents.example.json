@@ -1,0 +1,3 @@
+{
+  "<alias>": { "agentId": "<uuid del agente en staging>", "client": "<nombre del cliente>" }
+}

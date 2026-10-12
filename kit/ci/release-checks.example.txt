@@ -1,0 +1,4 @@
+# Un check run por línea: los que deben estar en success para crear el tag (nombre exacto en GitHub).
+# Ejemplo con Cloudflare Workers Builds:
+# Workers Builds: <producto>-admin
+# Workers Builds: <producto>-portal

@@ -1,0 +1,7 @@
+{
+  "stagingSupabaseRef": "<ref-del-proyecto-supabase-de-staging>",
+  "envFile": ".env.staging",
+  "guardedTools": [],
+  "defaultRuns": 3,
+  "ab": { "minDifference": 0.4, "alpha": 0.05 }
+}

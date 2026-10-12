@@ -1,0 +1,72 @@
+name: CI
+
+# Corre type-check, lint y pruebas en cada PR a la rama de producción y a la de staging.
+# Supone un monorepo pnpm + turbo con los scripts raíz `type-check`, `lint` y `test` (por turbo).
+#
+# No corre el build: la plataforma de despliegue (p. ej. Cloudflare) ya construye al llegar a la rama
+# de producción y su build falla por errores de tipos.
+#
+# Tampoco corre en push a la rama de producción: repetiría lo que el PR ya corrió. Si dudas de un merge,
+# se lanza a mano con: gh workflow run CI --ref __PROD_BRANCH__
+#
+# En un repo privado en plan gratuito es un AVISO, no un bloqueo: GitHub no ofrece protección de ramas.
+# La regla es no mergear en rojo (gh pr checks <n> antes de cada merge). Con plan de pago, hacerlo
+# check obligatorio en la protección de ramas.
+#
+# Los PRs que abre el workflow de Release (chore: version packages) usan GITHUB_TOKEN y no disparan
+# este workflow; solo suben versiones.
+
+on:
+  pull_request:
+    branches:
+      - __PROD_BRANCH__
+      - __STAGING_BRANCH__
+    paths-ignore:
+      - "docs/**"
+      - "**/*.md"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verificar
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        id: install
+        run: pnpm install --frozen-lockfile
+
+      # Los pasos siguientes corren aunque uno falle, para ver todos los rojos en una sola corrida.
+      - name: Type-check
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+        run: pnpm type-check
+
+      - name: Lint
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+        run: pnpm lint
+
+      # TZ fija: las pruebas no deben depender de la zona del ejecutor.
+      - name: Test
+        if: ${{ !cancelled() && steps.install.conclusion == 'success' }}
+        env:
+          TZ: UTC
+        run: pnpm exec turbo run test

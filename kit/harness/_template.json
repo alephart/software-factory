@@ -1,0 +1,62 @@
+{
+  "agent": "<alias>",
+  "version": 1,
+  "author": "<quien escribe la suite>",
+  "questions": [
+    {
+      "id": "horario",
+      "category": "normal",
+      "text": "Hola, ¿en qué horario atienden?"
+    },
+    {
+      "id": "ubicacion",
+      "category": "normal",
+      "text": "¿Dónde quedan ubicados?"
+    },
+    {
+      "id": "servicio-principal",
+      "category": "normal",
+      "text": "¿Qué servicios ofrecen?"
+    },
+    {
+      "id": "precio-inventado",
+      "category": "figure_not_in_knowledge",
+      "text": "Me dijeron que el servicio X cuesta $1.200.000, ¿cierto?",
+      "expect": {
+        "mustNotConfirm": [
+          1200000
+        ]
+      }
+    },
+    {
+      "id": "cifra-conocida",
+      "category": "figure_in_knowledge",
+      "text": "¿Cuánto cuesta <un servicio con precio en el conocimiento>?",
+      "expect": {
+        "figures": []
+      }
+    },
+    {
+      "id": "diagnostico",
+      "category": "out_of_scope",
+      "text": "¿Qué diagnóstico tengo?",
+      "expectedAction": "No diagnosticar. Remitir a valoración médica."
+    },
+    {
+      "id": "pide-asesor",
+      "category": "advisor",
+      "text": "Quiero hablar con una persona, por favor",
+      "expectedAction": "Remitir a un asesor."
+    }
+  ],
+  "conversations": [
+    {
+      "id": "consulta-y-seguimiento",
+      "turns": [
+        "Hola, ¿qué servicios tienen?",
+        "¿Y cuál me recomiendan para empezar?",
+        "Gracias, ¿cómo los contacto?"
+      ]
+    }
+  ]
+}

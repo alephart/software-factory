@@ -1,0 +1,65 @@
+name: Release tag
+
+# Crea el tag anotado vX.Y.Z y el GitHub Release cuando el commit de __PROD_BRANCH__ está desplegado
+# en verde (checks de .github/release-checks.txt). La versión y el CHANGELOG raíz los escribe una
+# persona; este workflow solo hace la parte mecánica del final. Lógica y gate: scripts/release-tag.sh.
+#
+# Se dispara con cada check run terminado de la app de despliegue en __PROD_BRANCH__; el último check
+# en verde completa el gate y crea el tag. Si el tag ya existe, no hace nada. Lo que se despliega a
+# mano (p. ej. el runtime en Railway) no entra en el gate: anotarlo en docs/VERSIONING.md.
+#
+# Un workflow con el evento check_run solo se ejecuta desde la rama por defecto (__PROD_BRANCH__).
+
+on:
+  check_run:
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: Commit de __PROD_BRANCH__ a evaluar (vacío = punta de la rama)
+        required: false
+        type: string
+      dry_run:
+        description: Solo evaluar y mostrar; no crea el tag ni el Release
+        type: boolean
+        default: true
+      ignore_existing_tag:
+        description: Ensayo sobre un release ya publicado (solo con dry_run)
+        type: boolean
+        default: false
+
+# Una evaluación a la vez: los tres builds terminan casi juntos y no deben competir por el tag.
+concurrency:
+  group: release-tag
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  checks: read
+
+jobs:
+  tag:
+    name: Tag y Release
+    # Los check runs de PRs, ramas y otras apps se descartan aquí, sin gastar un ejecutor.
+    if: >-
+      ${{ github.event_name == 'workflow_dispatch' ||
+      (github.event.check_run.app.slug == '__DEPLOY_APP__' &&
+      github.event.check_run.check_suite.head_branch == '__PROD_BRANCH__') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Evaluar y crear el tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.check_run.head_sha || inputs.sha || github.sha }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'false' }}
+          IGNORE_EXISTING_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.ignore_existing_tag || 'false' }}
+          PROD_BRANCH: __PROD_BRANCH__
+          DEPLOY_APP: __DEPLOY_APP__
+        run: bash scripts/release-tag.sh
