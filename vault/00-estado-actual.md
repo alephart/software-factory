@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-11
+actualizado: 2026-10-12
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -152,11 +152,11 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 
 | Ítem | Qué | Pts | Prioridad |
 |---|---|---|---|
-| FACTORY-1 | Kit `software-factory` con el vault adentro (CC PLATFORM-60 parte A) | 5 | alta |
-| FACTORY-2 | Agentes base versionados en el molde (reviewer, plan-reviewer, builders) | 3 | alta |
-| FACTORY-3 | CI modelo y arnés de regresión genérico en el molde | 5 | media |
+| FACTORY-1 | Kit `software-factory` con el vault adentro (CC PLATFORM-60 parte A) — **Done** (repo `alephart/software-factory`) | 5 | alta |
+| FACTORY-2 | Agentes base versionados en `kit/agents` — **Review & QA** (falta instalar en CC) | 3 | alta |
+| FACTORY-3 | CI modelo y arnés genérico en `kit/ci` y `kit/harness` v0.1, con `install.sh` — **Review & QA** (se prueba al instalar en Agenttia) | 5 | media |
 | FACTORY-4 | Holdout: CODEOWNERS de suites + set holdout fuera del repo | 3 | media |
-| FACTORY-5 | Regla de puerta única para hallazgos en caliente | 1 | alta |
+| FACTORY-5 | Regla de puerta única para hallazgos en caliente — **Done** | 1 | alta |
 | FACTORY-6 | Horas del caso 1 y cierre de la retro | 1 | media |
 | FACTORY-7 | Triage por lotes como ritual semanal | 2 | media |
 | FACTORY-8 | Calibración 1 del `plan-reviewer-agent` | 2 | baja |
