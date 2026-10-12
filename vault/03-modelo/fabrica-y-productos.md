@@ -8,21 +8,33 @@ estado: decidido
 
 Volver a [[README]] · Relacionado: [[escalera-de-madurez]] · [[flujo-planning-a-done]]
 
-## Estructura (decidida el 12/10)
+## Estructura (decidida el 12/10, nombres en inglés)
 
 ```
 agenttic/
-├── software-factory/          ← la fábrica: el molde
-│   ├── vault/                 conocimiento, modelo, lecciones, calibraciones, artículo
-│   ├── plantillas/            intake, triage, DoD, runbook, comentario por fase
-│   ├── agentes/               reviewer, plan-reviewer, builders base
-│   ├── ci/                    workflows modelo (CI, tag/release)
-│   └── arnés/                 arnés de regresión genérico
+├── software-factory/          ← la fábrica (repo propio)
+│   ├── README.md              qué es la fábrica y cómo instalar una pieza en un producto
+│   ├── vault/                 conocimiento: modelo, plantillas de proceso, lecciones, calibraciones, artículo (Obsidian)
+│   └── kit/                   lo que se copia a los productos
+│       ├── agents/            reviewer, plan-reviewer, builders base (FACTORY-2)
+│       ├── ci/                workflows modelo: CI, tag/release (FACTORY-3)
+│       ├── harness/           arnés de regresión genérico (FACTORY-3)
+│       └── docs/              esqueletos de README, AGENTS.md, ENVIRONMENTS.md, CODEOWNERS (FACTORY-4)
 ├── conversion-platform/       ← producto (cliente de la fábrica)
 └── agenttia/                  ← producto
 ```
 
-La fábrica es dueña del **molde**; cada producto tiene su **instancia**.
+La fábrica es dueña del **kit**; cada producto tiene su **instancia** (una copia).
+
+### Convención de idioma
+
+- **Carpetas raíz y de desarrollo en inglés:** `software-factory`, `vault`, `kit`, `agents`, `ci`, `harness`, `docs`.
+  Lo mismo en los repos de producto (`docs/tasks`, `.claude/agents`, `scripts/regression`).
+- **El contenido puede ir en cualquier idioma:** notas del vault, archivos, ramas o carpetas de contenido.
+  El vault sigue en español (`03-modelo`, `04-plantillas`…).
+- En los textos en español se puede seguir diciendo "arnés" o "molde"; el nombre de la carpeta es `harness` y `kit`.
+- Las plantillas de proceso (intake, triage, DoD, runbook, comentario por fase) viven en `vault/04-plantillas/`;
+  `kit/docs/` lleva solo esqueletos que el producto copia a su repo.
 
 ## Principio: el producto se entrega sin la fábrica
 
@@ -33,6 +45,7 @@ Consecuencias:
 
 1. **Copiar, no enlazar.** Lo que la fábrica instala en un producto se copia y pasa a ser del producto:
    agentes, CI, arnés, documentación. Nada de submódulos, plugins o paquetes que el producto necesite descargar de la fábrica para funcionar.
+   El kit se copia a mano o con un script; la copia se versiona en el repo del producto.
    (Esto reemplaza la idea de sincronizar con un plugin de Claude Code: un plugin puede *instalar* la copia, nunca ser requisito para operar.)
 2. **El producto se explica solo.** Su README, `AGENTS.md`, `ENVIRONMENTS.md`, ADR, `VERSIONING.md` y runbooks bastan para
    instalar, desplegar, probar y operar. **Ninguna referencia a rutas del vault ni a la fábrica** en el repo del producto.
@@ -48,10 +61,10 @@ Consecuencias:
 
 | Pieza | Producto | Fábrica |
 |---|---|---|
-| Código, migraciones, CI instalado, pruebas | ✔ | molde del CI |
-| Arnés de regresión y suites de sus agentes | ✔ (copia del arnés + suites propias) | arnés genérico |
+| Código, migraciones, CI instalado, pruebas | ✔ | `kit/ci` |
+| Arnés de regresión y suites de sus agentes | ✔ (copia del arnés + suites propias) | `kit/harness` |
 | ADR, ENVIRONMENTS, AGENTS.md, VERSIONING, runbooks por ítem, planes en `docs/tasks/` | ✔ | plantillas |
-| `.claude/agents/` | ✔ (copia, opcional para quien recibe) | agentes base |
+| `.claude/agents/` | ✔ (copia, opcional para quien recibe) | `kit/agents` |
 | Plane del producto (ítems, Request) | ✔ | — |
 | Vault, modelo, escalera, lecciones, artículo, calibraciones | — | ✔ |
 | Plantillas de intake/triage/DoD como proceso | — | ✔ (el producto puede llevarse una copia si quiere) |

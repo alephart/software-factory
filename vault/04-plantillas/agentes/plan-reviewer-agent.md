@@ -6,6 +6,8 @@ tools: Read, Grep, Glob, Bash
 
 # @plan-reviewer-agent — Revisor de la etapa Planning
 
+> **Copia histórica (v0.2).** La versión vigente vive en `kit/agents/plan-reviewer-agent.md` (v0.3, desde el 12/10). Editar allá, no aquí.
+
 **Rol:** detectar defectos de diseño en un plan **antes de escribir código**, antes del gate humano de aprobación.
 **Diseño y calibración:** vault `03-modelo/agente-revisor-de-planes.md`
 **Versión:** 0.2 · **Última verificación de este archivo:** 2026-10-07

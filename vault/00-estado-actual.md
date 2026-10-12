@@ -152,7 +152,7 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 
 | Ítem | Qué | Pts | Prioridad |
 |---|---|---|---|
-| FACTORY-1 | Molde `software-factory` con el vault adentro (CC PLATFORM-60 parte A) | 5 | alta |
+| FACTORY-1 | Kit `software-factory` con el vault adentro (CC PLATFORM-60 parte A) | 5 | alta |
 | FACTORY-2 | Agentes base versionados en el molde (reviewer, plan-reviewer, builders) | 3 | alta |
 | FACTORY-3 | CI modelo y arnés de regresión genérico en el molde | 5 | media |
 | FACTORY-4 | Holdout: CODEOWNERS de suites + set holdout fuera del repo | 3 | media |
@@ -176,6 +176,6 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory. Lee ~/Projects/agenttic-vault/00-estado-actual.md
-y el README del vault, y dime dónde quedamos antes de seguir.
+Retomamos la software factory. Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md
+y el README del vault (la fábrica: ~/Projects/agenttic/software-factory), y dime dónde quedamos antes de seguir.
 ```
