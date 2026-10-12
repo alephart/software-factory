@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "1413489e2c03f79f",
+        "id": "b42ccb4ebce49c61",
         "type": "tabs",
         "children": [
           {
-            "id": "46607a92fb6b2cd1",
+            "id": "24452a5a2a1b132f",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "00-estado-actual.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "00-estado-actual"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "00-estado-actual.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +160,6 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,16 +186,42 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "46607a92fb6b2cd1",
+  "active": "24452a5a2a1b132f",
   "lastOpenFiles": [
-    "Sin título.canvas",
+    "03-modelo/fabrica-y-productos.md",
+    "04-plantillas/comentario-por-fase.md",
+    "04-plantillas/runbook-salida-a-prod.md",
+    "06-lecciones/04-caso-1-retrospectiva.md",
+    "03-modelo/calibracion/platform-59-plan-v2.1.md",
+    "03-modelo/calibracion/platform-59-plan-v2.2.md",
+    "Sin título 3.canvas",
+    "03-modelo/calibracion/platform-59-plan-v2.md",
+    "00-estado-actual.md",
+    "Sin título 1.base",
+    "Sin título 2.canvas",
+    "Sin título 1.canvas",
     "Sin título.base",
-    "2026-09-28.md",
-    "03-modelo/ajustes-al-planteamiento.md",
-    "02-diagnostico/roles-actuales.md",
-    "02-diagnostico/problemas-por-etapa.md",
-    "01-investigacion/software-factory-panorama.md",
+    "Sin título.canvas",
+    "README.md",
+    "06-lecciones/03-proceso-interno-interfaz-simple.md",
     "05-articulo/notas-articulo.md",
-    "README.md"
+    "03-modelo/calibracion/platform-59-comparacion.md",
+    "01-investigacion/software-factory-panorama.md",
+    "03-modelo/calibracion/platform-59-plan-reviewer-v1.md",
+    "03-modelo/calibracion/platform-59-plan-v1.md",
+    "03-modelo/recomendaciones.md",
+    "03-modelo/plan-separacion-infra.md",
+    "06-lecciones/02-triage.md",
+    "02-diagnostico/infra-inventory-2026-10-06.md",
+    "03-modelo/calibracion/agent-38-plan-original.md",
+    "03-modelo/calibracion",
+    "04-plantillas/triage.md",
+    "06-lecciones/01-intake.md",
+    "04-plantillas/intake.md",
+    "04-plantillas/definition-of-done.md",
+    "04-plantillas/asistente-intake.md",
+    "04-plantillas/agentes/plan-reviewer-agent.md",
+    "04-plantillas/agentes",
+    "06-lecciones"
   ]
 }

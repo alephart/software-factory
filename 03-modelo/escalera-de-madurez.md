@@ -1,7 +1,8 @@
 ---
 tags: [modelo, madurez]
 creado: 2026-09-28
-nivel_actual: 0
+nivel_actual: 1 (en curso)
+actualizado: 2026-10-10
 ---
 
 # Escalera de madurez: de emprendimiento a software factory
@@ -59,3 +60,5 @@ Cada nivel tiene un criterio de salida verificable. No se avanza sin cumplirlo.
 | Fecha | Nivel | Nota |
 |---|---|---|
 | 2026-09-28 | 0 | Modelo definido. Siguiente: plantillas nivel 1 y 2. |
+| 2026-10-03 | 1 (en curso) | Proyecto Request como cola única con plantilla de intake. Empieza el registro de tiempos con el caso 1. |
+| 2026-10-10 | 1 (en curso), con piezas de 2 y 3 | Nivel 1 aún no cumple su salida (7 días de cola, se piden 14, y sin línea base de tiempos de esfuerzo). Nivel 2 parcial: triage por causa raíz, DoD v0.1, gate de especificación, revisor de planes. Nivel 3 adelantado por necesidad: staging equivalente a prod, suites de regresión por agente, línea base y A/B con regla previa. Falta para 3: holdout de las suites y que ningún despliegue salga sin correrlas. Ver [[04-caso-1-retrospectiva]]. |
