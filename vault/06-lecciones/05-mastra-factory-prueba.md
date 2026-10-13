@@ -43,7 +43,7 @@ con gates humanos (arrancar tarjeta, aceptar tarea, aprobar plan, merge).
 **Confirmado (21:37):** es el bug abierto [mastra-ai/mastra#26655](https://github.com/mastra-ai/mastra/issues/26655)
 (11/10, impacto alto; PR #26661 abierto). Una App instalada en una **cuenta personal** de GitHub queda ligada a la sesión
 del usuario y no a la llave de organización que usa la Factory. **Instalarla en una organización de GitHub sí funciona.**
-Salida: organización de pruebas (`agenttic-lab`) con `factory-sandbox` transferido allí.
+Salida aplicada (21:54): `factory-sandbox` transferido a la organización `alephart-co`; la Factory ya conecta y muestra el tablero.
 
 ## Decisión (provisional)
 
