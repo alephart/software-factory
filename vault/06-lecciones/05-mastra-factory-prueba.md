@@ -123,3 +123,14 @@ revisión independiente del plan y la dependencia de la plataforma (bug #26655: 
 - `src/mastra/public/factory-skills/`: **skills propias o reemplazos** de las incluidas (`factory-triage`, `factory-plan`,
   `factory-review`…). Se versiona. Es el punto de entrada para llevar nuestras reglas (no crear etiquetas, triage con
   aprobación humana, plantilla de plan, plan-reviewer) sin tocar `node_modules`.
+
+## Hallazgo: Claude Code puede operar la Factory
+
+La plantilla trae la skill `mastra-factory` en `.claude/skills/` (y `.agents/skills/`), de `mastra-ai/skills`.
+Con ella, Claude Code supervisa y opera la Factory por CLI (`mastra api factory …`): estado, cola, ítems, decisiones
+pendientes, salud del supervisor y, con autorización, acciones. Por defecto es de solo lectura.
+**Abre un camino de integración:** Plane + Claude Code como capa de control y triage, Mastra Factory como ejecutor con tablero.
+
+Estructura real de `my-factory` (revisada el 12/10): `src/mastra/index.ts`, `src/mastra/public/factory/` (generado),
+`.mastra-project.json` (IDs de proyecto y organización, no secretos: se versiona), `.env` ignorado,
+`docker-compose.yml` (Postgres local para autoalojar).
