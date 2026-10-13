@@ -1,0 +1,62 @@
+---
+tags: [leccion, herramientas, mastra, nivel-4]
+creado: 2026-10-12
+estado: pausado
+item: FACTORY-10
+---
+
+# Prueba de Mastra Factory (12/10)
+
+Volver a [[README]] · Relacionado: [[flujo-planning-a-done]] · [[escalera-de-madurez]]
+
+## Qué queríamos saber
+
+Si Mastra Factory (beta del 08/09/2026, Apache-2.0) sirve como tablero y orquestador de la fábrica (nivel 4),
+en lugar de construir uno propio. Su tablero es casi nuestro flujo: Intake → Triage → Planning → Build → Review → Done,
+con gates humanos (arrancar tarjeta, aceptar tarea, aprobar plan, merge).
+
+## Lo que sí sabemos (leyendo el código)
+
+- **Ajustable:** las integraciones implementan una interfaz común (`FactoryIntegration`); hay GitHub, GitLab, Linear,
+  Jira, Slack e incident.io. **Plane no existe**, pero se escribe tomando Linear como molde.
+- **Tablero en código:** `defineBoard` y skills por etapa (`factory-triage`, `factory-plan`, `factory-review`…).
+- **Agente constructor:** MastraCode, propio de Mastra. Lee archivos de proyecto de Claude Code (skills, `.mcp.json`),
+  pero **no es Claude Code**.
+- **Dependencia fuerte de la plataforma de Mastra:** login, base de datos (Neon), Redis, sandboxes y la
+  conexión con GitHub pasan por `platform.mastra.ai` salvo que se autoaloje todo (GitHub App propia, WorkOS, E2B…).
+
+## Lo que pasó (≈4 h, sin ver el tablero)
+
+1. **Local (`npm run dev`):** la Factory arrancó, pero no reconoció la instalación de GitHub.
+   Un corte de red pasajero (`ENOTFOUND`/`ETIMEDOUT` a Neon) confundió el diagnóstico al inicio.
+2. Al repetir con la red estable, GitHub devolvió la instalación (`installation_id=170796061`, `setup_action=install`),
+   pero `GET /web/github/status` respondió `installations: []`, `reason: not_connected`.
+   Organización del `.env` = organización de la sesión (`org_01KX4N…`): no era un cruce de organizaciones.
+3. **Nube (`pnpm run deploy`, proyecto `my-factory`):** despliegue correcto (Neon + Redis gestionados).
+   El mismo bucle: Connect GitHub → página de configuración de la App en GitHub → no regresa.
+4. Ruido propio que sumó: tres instalaciones (`mastra-factory-tes`, `mastra-factory-test`, `my-factory`),
+   cada una con su proyecto y su base de datos; la plataforma no permite borrar proyectos.
+
+**Conclusión:** la falla está del lado de la plataforma de Mastra (la instalación de GitHub no queda
+"usable" para la organización). No depende de nuestra red ni de nuestra configuración.
+
+## Decisión (provisional)
+
+- **Pausado.** Reportar a Mastra (issue en `mastra-ai/mastra`) y retomar cuando respondan o salga una versión nueva.
+- La idea sigue en pie: tablero + gates + skills por etapa es lo que queremos para el nivel 4.
+  Antes de adoptarlo hay que resolver tres cosas: Plane (integración propia), Claude Code como constructor
+  y la dependencia de la plataforma (o autoalojar).
+- Mientras tanto, la fábrica sigue con Claude Code + Plane + kit.
+
+## Lecciones para la fábrica
+
+- **Ponerle límite de tiempo a una prueba antes de empezar** (aquí: 2 puntos) y cortarla cuando se pasa, con nota.
+- **Una sola instalación por prueba.** Reinstalar sin limpiar multiplicó proyectos y bases de datos y confundió el diagnóstico.
+- **Leer el código y las rutas de estado** (`/web/github/status`) acortó el diagnóstico más que la documentación.
+- **Nunca pegar un `.env` en el chat**; basta el nombre del host o de las variables.
+
+## Pendiente de limpieza
+
+- Proyectos `mastra-factory-tes`, `mastra-factory-test` y `my-factory` en la plataforma (inactivos, plan Starter).
+- GitHub App "Mastra Platform" con acceso a `factory-sandbox` y `my-factory`: desinstalar si se descarta.
+- Repos `alephart/factory-sandbox` y `alephart/my-factory`: archivar al cerrar FACTORY-10.
