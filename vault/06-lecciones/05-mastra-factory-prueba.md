@@ -1,7 +1,7 @@
 ---
 tags: [leccion, herramientas, mastra, nivel-4]
 creado: 2026-10-12
-estado: pausado
+estado: en curso
 item: FACTORY-10
 ---
 
@@ -40,9 +40,14 @@ con gates humanos (arrancar tarjeta, aceptar tarea, aprobar plan, merge).
 **Conclusión:** la falla está del lado de la plataforma de Mastra (la instalación de GitHub no queda
 "usable" para la organización). No depende de nuestra red ni de nuestra configuración.
 
+**Confirmado (21:37):** es el bug abierto [mastra-ai/mastra#26655](https://github.com/mastra-ai/mastra/issues/26655)
+(11/10, impacto alto; PR #26661 abierto). Una App instalada en una **cuenta personal** de GitHub queda ligada a la sesión
+del usuario y no a la llave de organización que usa la Factory. **Instalarla en una organización de GitHub sí funciona.**
+Salida: organización de pruebas (`agenttic-lab`) con `factory-sandbox` transferido allí.
+
 ## Decisión (provisional)
 
-- **Pausado.** Reportar a Mastra (issue en `mastra-ai/mastra`) y retomar cuando respondan o salga una versión nueva.
+- **Seguir con la salida:** App instalada en una organización de GitHub de pruebas. Seguir #26655 para cuando lo arreglen.
 - La idea sigue en pie: tablero + gates + skills por etapa es lo que queremos para el nivel 4.
   Antes de adoptarlo hay que resolver tres cosas: Plane (integración propia), Claude Code como constructor
   y la dependencia de la plataforma (o autoalojar).

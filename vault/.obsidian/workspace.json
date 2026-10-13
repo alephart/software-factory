@@ -186,8 +186,9 @@
       "bases:Crear nueva base": false
     }
   },
-  "active": "24452a5a2a1b132f",
+  "active": "b6fe0b99d8ceb4e1",
   "lastOpenFiles": [
+    "06-lecciones/05-mastra-factory-prueba.md",
     "03-modelo/fabrica-y-productos.md",
     "04-plantillas/comentario-por-fase.md",
     "04-plantillas/runbook-salida-a-prod.md",
@@ -220,7 +221,6 @@
     "04-plantillas/intake.md",
     "04-plantillas/definition-of-done.md",
     "04-plantillas/asistente-intake.md",
-    "04-plantillas/agentes/plan-reviewer-agent.md",
     "04-plantillas/agentes",
     "06-lecciones"
   ]
