@@ -109,3 +109,10 @@ El flujo de Mastra Factory coincide casi uno a uno con el nuestro y aporta lo qu
 tablero visible, gates configurables, guardias de repo, revisión independiente con ciclo de corrección.
 Lo que habría que adaptar: integración con Plane, reglas propias (no crear etiquetas ni pasar triage sin aprobación),
 revisión independiente del plan y la dependencia de la plataforma (bug #26655: solo funciona con organizaciones de GitHub).
+
+## Cierre del recorrido (22:30)
+
+- Merge humano del PR #5 → la tarjeta #1 pasó **sola a Done**. El duplicado #4, al cerrarlo en GitHub, pasó solo a **Canceled**.
+- Ciclo completo Intake → Done en ~30 min, la mayor parte en Review. El tablero refleja GitHub sin trabajo manual.
+- Detalle raro: la tarjeta en Done muestra "Suggested: Start run".
+- **Pendiente:** comparación final con nuestro flujo y decisión (adoptar / adaptar / descartar).
