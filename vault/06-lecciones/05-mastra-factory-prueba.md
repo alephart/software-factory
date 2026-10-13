@@ -81,3 +81,14 @@ Tiempo: ~2,5 min de Intake a plan listo. Modelo: Claude Haiku 5.5 (~14k tokens h
 | Se detuvo: "auto-aprobado de planes desactivado" | El gate humano del plan funciona |
 
 **Falta frente a la fábrica:** no hubo revisión independiente del plan (el mismo agente investiga y planea; no hay plan-reviewer con otro modelo).
+
+## Build → Review (22:12–22:13)
+
+- Aprobación del plan = botón **Build** en la tarjeta (nombre poco claro: no dice "aprobar"). Antes de aprobar se puede
+  pedir ajustes al plan por chat ("Ask Mastra Code…"), equivalente conversado al AJUSTAR del plan-reviewer.
+- Proveedor y modelo los elige el humano en settings (aquí: Anthropic, Claude Haiku 5.5).
+- Build en ~1 min: **guardias de repo** antes de editar, antes del push y antes del PR (patrón que no tenemos escrito en
+  nuestros builders); cambio y prueba según plan; suite 2/2 + reproducción manual; rama `factory/issue-1`; PR #5 sin el
+  archivo del plan; pasó solo a Review y asignó la revisión al humano. Dejó pendientes explícitos (cerrar #4; plan sin versionar).
+- Gasto de todo el recorrido: ~17,5k tokens de Haiku.
+- Por ver: si `factory-review` revisa el PR en una sesión independiente, y si el merge mueve la tarjeta a Done.
