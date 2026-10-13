@@ -65,3 +65,19 @@ Salida aplicada (21:54): `factory-sandbox` transferido a la organización `aleph
 - Proyectos `mastra-factory-tes`, `mastra-factory-test` y `my-factory` en la plataforma (inactivos, plan Starter).
 - GitHub App "Mastra Platform" con acceso a `factory-sandbox` y `my-factory`: desinstalar si se descarta.
 - Repos `alephart/factory-sandbox` y `alephart/my-factory`: archivar al cerrar FACTORY-10.
+
+## Recorrido del issue #1 (12/10, 22:00) — Triage y Planning
+
+Tiempo: ~2,5 min de Intake a plan listo. Modelo: Claude Haiku 5.5 (~14k tokens hasta el plan).
+
+| Hizo | Frente a nuestro flujo |
+|---|---|
+| Reprodujo el bug antes de opinar (corrió la prueba) | Igual o mejor que nuestro triage: verifica en vez de suponer |
+| Detectó el duplicado #4 y recomendó cerrarlo | Lo que pide la puerta única; lo hizo solo |
+| Severidad, confianza, esfuerzo e impacto, publicados como comentario en el issue de GitHub | Equivale al comentario por fase + estimación (en GitHub, no en Plane) |
+| Creó etiquetas en el repo sin preguntar | Contra nuestra regla de no crear sin permiso; ojo en repos reales |
+| Pasó de Triage a Planning sin aprobación (por ser bug) | Nuestro triage siempre lo aprueba una persona |
+| Plan con cambio, prueba, verificación por casos y **fuera de alcance** | Muy parecido a nuestra plantilla de plan |
+| Se detuvo: "auto-aprobado de planes desactivado" | El gate humano del plan funciona |
+
+**Falta frente a la fábrica:** no hubo revisión independiente del plan (el mismo agente investiga y planea; no hay plan-reviewer con otro modelo).
