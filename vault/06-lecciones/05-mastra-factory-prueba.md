@@ -92,3 +92,20 @@ Tiempo: ~2,5 min de Intake a plan listo. Modelo: Claude Haiku 5.5 (~14k tokens h
   archivo del plan; pasó solo a Review y asignó la revisión al humano. Dejó pendientes explícitos (cerrar #4; plan sin versionar).
 - Gasto de todo el recorrido: ~17,5k tokens de Haiku.
 - Por ver: si `factory-review` revisa el PR en una sesión independiente, y si el merge mueve la tarjeta a Done.
+
+## Review (22:13–22:22)
+
+- **Revisión independiente:** sesión aparte ("Review sessions"), no la del builder. Equivale a nuestro reviewer-agent.
+- **Primera vuelta: cambios necesarios.** Bloqueante real: con decimales (`formatCOP(1200.5)`) la expresión agrupaba también
+  la parte decimal y daba un monto engañoso; además la descripción del PR afirmaba algo falso ("sin decimales").
+  El plan había dejado decimales fuera de alcance, pero el revisor vio que el cambio los empeoraba.
+- **Corrección y segunda vuelta: aprobado**, con prueba de decimales agregada. El ciclo cambios → corrección → re-revisión
+  ocurrió sin intervención humana.
+- **Costo:** ~15–20 min en las dos vueltas (mucho más que construir).
+
+## Conclusión preliminar (a confirmar tras el merge)
+
+El flujo de Mastra Factory coincide casi uno a uno con el nuestro y aporta lo que nos falta automatizar:
+tablero visible, gates configurables, guardias de repo, revisión independiente con ciclo de corrección.
+Lo que habría que adaptar: integración con Plane, reglas propias (no crear etiquetas ni pasar triage sin aprobación),
+revisión independiente del plan y la dependencia de la plataforma (bug #26655: solo funciona con organizaciones de GitHub).
