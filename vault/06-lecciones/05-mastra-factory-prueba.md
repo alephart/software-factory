@@ -116,3 +116,10 @@ revisión independiente del plan y la dependencia de la plataforma (bug #26655: 
 - Ciclo completo Intake → Done en ~30 min, la mayor parte en Review. El tablero refleja GitHub sin trabajo manual.
 - Detalle raro: la tarjeta en Done muestra "Suggested: Start run".
 - **Pendiente:** comparación final con nuestro flujo y decisión (adoptar / adaptar / descartar).
+
+## Dónde se adapta (leído en el código)
+
+- `src/mastra/public/factory/`: interfaz compilada en cada build (ruta fija en el código). **Se ignora en git**, junto con `.mastra/`.
+- `src/mastra/public/factory-skills/`: **skills propias o reemplazos** de las incluidas (`factory-triage`, `factory-plan`,
+  `factory-review`…). Se versiona. Es el punto de entrada para llevar nuestras reglas (no crear etiquetas, triage con
+  aprobación humana, plantilla de plan, plan-reviewer) sin tocar `node_modules`.
