@@ -1,7 +1,7 @@
 ---
 tags: [leccion, herramientas, mastra, nivel-4]
 creado: 2026-10-12
-estado: en curso
+estado: decidido
 item: FACTORY-10
 ---
 
@@ -134,3 +134,20 @@ pendientes, salud del supervisor y, con autorización, acciones. Por defecto es 
 Estructura real de `my-factory` (revisada el 12/10): `src/mastra/index.ts`, `src/mastra/public/factory/` (generado),
 `.mastra-project.json` (IDs de proyecto y organización, no secretos: se versiona), `.env` ignorado,
 `docker-compose.yml` (Postgres local para autoalojar).
+
+
+## Decisión (21/10)
+
+**Adaptar, corriendo en local (autoalojado).** La prueba en Mastra Cloud sirvió de test, pero el plan gratuito se agotó.
+La fábrica sigue con Mastra Factory en el Mac de Juan Carlos, sin depender de la plataforma:
+
+| Pieza | En local |
+|---|---|
+| Login | `MASTRACODE_AUTH_DISABLED=1` (un solo usuario, solo en el Mac) |
+| Base de datos | LibSQL local (sin `DATABASE_URL`) o Postgres + Redis con el `docker-compose.yml` que trae la plantilla |
+| Entornos de ejecución | `FACTORY_SANDBOX_PROVIDER=local` (corre en el Mac: menos aislamiento, nada de credenciales de prod) |
+| GitHub | GitHub App propia en la organización (`GITHUB_APP_*`); webhooks por túnel (cloudflared) o reconciliación cada hora |
+| Modelo | Llave de Anthropic directa, con límite de gasto |
+
+Costo: solo los tokens del modelo. Se mantiene lo acordado: Plane manda en producto, Mastra ejecuta Planning → Build → Review,
+Claude Code es puente y supervisor, y las decisiones importantes son humanas. Seguimiento en FACTORY-11.

@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-12
+actualizado: 2026-10-21
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -22,6 +22,14 @@ Volver a [[README]]
 - **Fábrica:** el caso 1 es el primer ítem que recorre el flujo completo. Retrospectiva medida en
   [[04-caso-1-retrospectiva]]. Estándares nuevos del 10/10: [[definition-of-done]] v0.2, [[triage]] v0.4,
   [[runbook-salida-a-prod]], [[comentario-por-fase]]; Fibonacci activa en Plane.
+
+## 21/10 — al retomar (pausa del 13 al 20/10)
+
+- **CC:** canal de EMA en producción. Para el Go de IMEC se agregó `request_advisor` (aviso a un asesor sin pausar al agente),
+  con ADR 038 y suite de ORIANA v2 probada con el arnés (PR #239, en `cc-stage`; `cc-stage` va 9 commits adelante de `master`).
+  **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
+- **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: adaptar y correr **en local**
+  (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11: Mastra Factory autoalojada.
 
 ## 11/10 — lo que avanzó (Claude Code, cotejado en GitHub y Plane)
 
