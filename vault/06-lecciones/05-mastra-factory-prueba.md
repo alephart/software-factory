@@ -136,18 +136,19 @@ Estructura real de `my-factory` (revisada el 12/10): `src/mastra/index.ts`, `src
 `docker-compose.yml` (Postgres local para autoalojar).
 
 
-## Decisión (21/10)
+## Decisión (21/10, corregida)
 
-**Adaptar, corriendo en local (autoalojado).** La prueba en Mastra Cloud sirvió de test, pero el plan gratuito se agotó.
-La fábrica sigue con Mastra Factory en el Mac de Juan Carlos, sin depender de la plataforma:
+**Nos vamos con nuestras piezas; Mastra Factory es el motor y la UI.**
 
-| Pieza | En local |
-|---|---|
-| Login | `MASTRACODE_AUTH_DISABLED=1` (un solo usuario, solo en el Mac) |
-| Base de datos | LibSQL local (sin `DATABASE_URL`) o Postgres + Redis con el `docker-compose.yml` que trae la plantilla |
-| Entornos de ejecución | `FACTORY_SANDBOX_PROVIDER=local` (corre en el Mac: menos aislamiento, nada de credenciales de prod) |
-| GitHub | GitHub App propia en la organización (`GITHUB_APP_*`); webhooks por túnel (cloudflared) o reconciliación cada hora |
-| Modelo | Llave de Anthropic directa, con límite de gasto |
+- **Manda nuestro proceso:** Plane, triage, plan-reviewer, reviewer, gate de regresión, DoD y kit.
+- **Mastra ejecuta el trabajo con nuestras skills** (Planning → Build → Review) y aporta el tablero, los gates y el
+  seguimiento. Nuestras reglas van en `factory-skills/`, copiadas desde el kit (no se usan las skills de Mastra sin adaptar).
+- **Productos independientes:** CC y Agenttia no dependen de la Factory; solo reciben PRs.
+- **Dónde vive:** repo nuevo, solo para el servidor de la Factory, desplegado en un **servidor propio (autoalojado)**.
+  El repo `software-factory` sigue con vault y kit.
+- **Modelos propios:** Anthropic, OpenAI u otros, con nuestras llaves; un modelo por etapa si conviene.
+- **Local = desarrollo:** se levanta en el Mac (`pnpm dev` + docker-compose con Postgres y Redis) para probar cambios antes de desplegar.
+- **Humanos:** aprobar el plan, el merge, staging, salida a prod y Go del cliente.
 
-Costo: solo los tokens del modelo. Se mantiene lo acordado: Plane manda en producto, Mastra ejecuta Planning → Build → Review,
-Claude Code es puente y supervisor, y las decisiones importantes son humanas. Seguimiento en FACTORY-11.
+Pendiente de definir (infraestructura del servidor): URL pública con HTTPS, login (WorkOS u otro), dónde corren los agentes
+(mismo servidor o E2B), GitHub App propia, Postgres + Redis. Seguimiento en FACTORY-11.
