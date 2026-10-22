@@ -188,6 +188,7 @@
   },
   "active": "b6fe0b99d8ceb4e1",
   "lastOpenFiles": [
+    "03-modelo/factory-server.md",
     "06-lecciones/05-mastra-factory-prueba.md",
     "03-modelo/fabrica-y-productos.md",
     "04-plantillas/comentario-por-fase.md",
@@ -220,7 +221,6 @@
     "06-lecciones/01-intake.md",
     "04-plantillas/intake.md",
     "04-plantillas/definition-of-done.md",
-    "04-plantillas/asistente-intake.md",
     "04-plantillas/agentes",
     "06-lecciones"
   ]

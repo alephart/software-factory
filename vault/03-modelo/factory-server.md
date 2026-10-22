@@ -18,12 +18,12 @@ Volver a [[README]] · Relacionado: [[fabrica-y-productos]] · [[05-mastra-facto
 | Servidor | DigitalOcean, Droplet **dedicado** de 8 GB / 4 vCPU / 160 GB (~USD 48/mes) |
 | Dominio | `factory.alephart.co` |
 | Entrada pública | Túnel de Cloudflare (sin puertos abiertos) |
-| Acceso | Cloudflare Access delante de la Factory (piloto); WorkOS cuando entre más gente |
+| Acceso | **WorkOS** desde el inicio (la interfaz de la Factory no funciona sin login; `MASTRACODE_AUTH_DISABLED` no sirve para la UI). Entorno *Staging* de WorkOS para local, *Production* para el servidor. Cloudflare Access opcional como capa extra |
 | Base de datos | Postgres con pgvector + Redis en el mismo Droplet (Docker Compose) |
 | Agentes | En el mismo Droplet mientras solo se toquen repos de prueba; **E2B más adelante**, antes de tocar CC o Agenttia |
 | GitHub | GitHub App propia en la organización `alephart-co` |
 | Modelos | Llaves propias (Anthropic, OpenAI u otros), con límite de gasto |
-| Local | Solo desarrollo: `pnpm dev` + docker-compose en el Mac |
+| Local | Solo desarrollo: `pnpm dev` + docker-compose en el Mac, con WorkOS Staging |
 
 ## Reglas
 
