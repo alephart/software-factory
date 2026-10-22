@@ -31,6 +31,15 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 22/10 00:20 — dónde quedó FACTORY-11 (fase 1, local)
+
+- `factory-server` corre en local (`pnpm dev`, `localhost:4111`) con WorkOS Staging, GitHub App `agenttic-factory-dev`
+  en `alephart-co` y Haiku 5.5 (llave del workspace `factory-dev` de Anthropic). El triage y el plan del issue #6 funcionaron.
+- El #6 se enredó: hubo merge manual antes de Review (PR #7) y luego un revert (PR #8). `main` tiene el revert, así que el bug sigue.
+- **Para retomar:** tarjeta #6 a Canceled; cerrar el issue #6 y borrar la rama `factory/issue-6`; crear el issue nuevo (será el #9);
+  recorrerlo esperando entre etapas (en local sin webhooks la sincronización tarda 1–5 min) y hacer el merge solo después del Review.
+- Lección: en local, no tocar GitHub a mano mientras la tarjeta avanza.
+
 ## 11/10 — lo que avanzó (Claude Code, cotejado en GitHub y Plane)
 
 - **PLATFORM-62 Done:** cc-staging completo (portal y agenda sin workers.dev, Access solo en el admin, desvío de correos con `EMAIL_REDIRECT_TO`,
