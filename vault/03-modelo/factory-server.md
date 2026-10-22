@@ -38,3 +38,16 @@ Volver a [[README]] · Relacionado: [[fabrica-y-productos]] · [[05-mastra-facto
 2. **Nuestras skills:** triage con aprobación humana y sin crear etiquetas, plan con nuestra plantilla, plan-reviewer independiente, review con reglas del repo.
 3. **Servidor:** Droplet + Docker Compose + túnel + Access + respaldos; el mismo issue de prueba hasta Done.
 4. **Primer producto:** con E2B, Agenttia (caso 2).
+
+## Lecciones de la fase 1 (local, 22/10)
+
+- **WorkOS es obligatorio**: la interfaz no funciona con `MASTRACODE_AUTH_DISABLED`.
+- **Llave de Anthropic dentro de un workspace** (`factory-dev`): una llave sin workspace falla con `anthropic-workspace-id`.
+- **Sin webhooks, la revisión automática no arranca**: el evento "PR abierto" solo llega por webhook. La sincronización
+  periódica detecta issues nuevos y merges, pero no crea la tarjeta de revisión.
+- **Una revisión lanzada a mano no puede registrar el veredicto**: corre como sesión de usuario, sin la herramienta
+  `factory_review_source`, que solo tienen las sesiones de revisión ligadas a una tarjeta de Review. Hace el trabajo
+  (en el #10 aprobó con pruebas y casos borde) pero deja el veredicto sin publicar.
+- **No tocar GitHub a mano** mientras la tarjeta avanza (merge antes del Review → revert → tarjeta enredada).
+- **Conclusión:** para el flujo completo hacen falta webhooks: túnel de Cloudflare en el servidor (fase 3) o un túnel
+  temporal en local.
