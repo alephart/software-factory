@@ -31,6 +31,16 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 22/10 08:30 — FACTORY-11: fase 1 casi cerrada, sigue la fase 2
+
+- Issue #9 de `factory-sandbox` recorrido en la Factory local: triage, plan, build (PR #10) y revisión lanzada a mano
+  (aprobó, pero no publicó el veredicto: sin webhooks no hay tarjeta de Review). Falta: merge del PR #10, cerrar #9, ver Done.
+- Lecciones en [[factory-server]]: WorkOS obligatorio, llave de Anthropic en workspace, webhooks necesarios para Review.
+- **Siguiente: fase 2.** Nuestras skills en `factory-server/src/mastra/public/factory-skills/`: triage con aprobación
+  humana y sin crear etiquetas, plan con nuestra plantilla, plan-reviewer independiente, review con reglas del repo.
+  Requiere conectar la carpeta `~/Projects/agenttic/factory-server` en la sesión.
+- Aparte: webhooks en local (túnel temporal) o esperar a la fase 3 (servidor en `factory.alephart.co`).
+
 ## 22/10 00:20 — dónde quedó FACTORY-11 (fase 1, local)
 
 - `factory-server` corre en local (`pnpm dev`, `localhost:4111`) con WorkOS Staging, GitHub App `agenttic-factory-dev`
