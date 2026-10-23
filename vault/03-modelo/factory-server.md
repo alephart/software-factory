@@ -35,7 +35,7 @@ Volver a [[README]] · Relacionado: [[fabrica-y-productos]] · [[05-mastra-facto
 ## Fases
 
 1. **Local:** crear `factory-server` sin plataforma, GitHub App propia, un issue de `factory-sandbox` hasta Done con las skills de Mastra.
-2. **Nuestras skills:** triage con aprobación humana y sin crear etiquetas, plan con nuestra plantilla, plan-reviewer independiente, review con reglas del repo.
+2. **Nuestras skills:** triage con aprobación humana y sin crear etiquetas, plan con nuestra plantilla, plan-reviewer independiente, review con reglas del repo. **Escritas el 22/10** (ver abajo); falta probarlas con un issue.
 3. **Servidor:** Droplet + Docker Compose + túnel + Access + respaldos; el mismo issue de prueba hasta Done.
 4. **Primer producto:** con E2B, Agenttia (caso 2).
 
@@ -45,9 +45,37 @@ Volver a [[README]] · Relacionado: [[fabrica-y-productos]] · [[05-mastra-facto
 - **Llave de Anthropic dentro de un workspace** (`factory-dev`): una llave sin workspace falla con `anthropic-workspace-id`.
 - **Sin webhooks, la revisión automática no arranca**: el evento "PR abierto" solo llega por webhook. La sincronización
   periódica detecta issues nuevos y merges, pero no crea la tarjeta de revisión.
-- **Una revisión lanzada a mano no puede registrar el veredicto**: corre como sesión de usuario, sin la herramienta
-  `factory_review_source`, que solo tienen las sesiones de revisión ligadas a una tarjeta de Review. Hace el trabajo
-  (en el #10 aprobó con pruebas y casos borde) pero deja el veredicto sin publicar.
+- ~~Una revisión lanzada a mano no puede registrar el veredicto~~ **Corregido el 22/10:** la causa real era que faltaba
+  `MASTRACODE_PUBLIC_URL`; sin ella Mastra no entrega `factory_review_source` a **ninguna** sesión de review. Ver [[06-factory-primer-recorrido]].
 - **No tocar GitHub a mano** mientras la tarjeta avanza (merge antes del Review → revert → tarjeta enredada).
 - **Conclusión:** para el flujo completo hacen falta webhooks: túnel de Cloudflare en el servidor (fase 3) o un túnel
   temporal en local.
+
+## Fase 2 — nuestras skills (22/10: probadas de punta a punta con factory-sandbox #2)
+
+Viven en `factory-server/src/mastra/public/factory-skills/`; el detalle está en `factory-server/docs/factory-skills.md`.
+
+| Skill | Cómo | Regla de la fábrica que lleva |
+|---|---|---|
+| `factory-triage` v0.1 | Reemplazo completo | Plantilla de [[triage]] v0.5; nunca etiquetas; nunca avanza la tarjeta (pide la etapa actual) |
+| `factory-plan` v0.1 | Reemplazo completo + `references/plantilla-plan.md` | Plantilla de plan; Fase 0 versiona el plan en `docs/tasks/`; publica el plan en el issue |
+| `factory-plan-review` v0.1 | Skill nueva | `plan-reviewer-agent` v0.3; sesión nueva, solo lee, veredicto en el issue |
+| `factory-review` / `factory-rereview` | **Generadas** (`npm run skills:build`) | La de Mastra + `skills-src/reglas-del-repo.md` antes del veredicto (`reviewer-agent` v0.3) |
+
+**Hallazgos del código de Mastra (`@mastra/factory@0.24.0`):**
+- El override es **por archivo**, no por carpeta: una skill local reemplaza `SKILL.md` y las `references/` empaquetadas siguen visibles.
+  Por eso la review se **genera** (insertar una sección) en vez de reescribir 100 KB atados a herramientas internas.
+- **No hay subagentes** en las sesiones de la Factory (`subagents: []`): el plan-reviewer no puede correr dentro de la sesión del plan.
+  Se resolvió como skill aparte en **sesión nueva**, que además permite elegir otro modelo. El plan se publica en el issue
+  (`<!-- agenttic-factory-plan -->`) para que esa sesión lo lea sin heredar contexto.
+- La política del tablero Work ya da dos frenos: solo un `bug` puede pasar solo a Planning, y con *Auto-approve plans* apagado
+  ningún agente pasa a Building. Nuestro triage va más allá: tampoco avanza los bugs.
+- El builder recibe "Implement the approved plan" en el mismo hilo; no hay skill de build que adaptar. Para que el plan viva en el repo,
+  la plantilla trae la Fase 0.
+
+**Desvíos frente a la decisión del 21/10:** las skills no se "copian del kit" tal cual: el kit tiene agentes de Claude Code, no skills
+de la Factory. Se derivaron de ellos y desde ahora son de `factory-server`, con su versión. La regla de CI de la fábrica (CI en rojo bloquea)
+prevalece sobre la de Mastra (CI solo informa).
+
+**Probado el 22/10** (skills hasta v0.4): recorrido completo de `factory-sandbox` #2, con túnel temporal de Cloudflare para los webhooks.
+Resultados, defectos corregidos, modelos y mejoras en [[06-factory-primer-recorrido]]. Falta para cerrar la fase 2: merge del PR #11.

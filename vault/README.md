@@ -39,6 +39,8 @@ No se trata de demostrar que un equipo pequeño iguala a uno grande. Se trata de
   - [[02-triage]] — diagnóstico + decisión, causas raíz, rúbrica
   - [[03-proceso-interno-interfaz-simple]] — el proceso es interno; la interfaz para producto es simple
   - [[04-caso-1-retrospectiva]] — caso 1 de punta a punta: línea de tiempo, métricas y hallazgos antes del cliente
+  - [[05-mastra-factory-prueba]] — prueba de Mastra Factory (12/10)
+  - [[06-factory-primer-recorrido]] — primer recorrido completo con nuestras skills: defensa en capas, defectos, modelos y mejoras
 
 ## Estructura en Plane
 

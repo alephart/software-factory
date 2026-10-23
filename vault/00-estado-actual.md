@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-21
+actualizado: 2026-10-22
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -30,6 +30,25 @@ Volver a [[README]]
   **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
+
+## 22/10 23:15 — FACTORY-11 fase 2: recorrido completo con nuestras skills
+
+- `factory-sandbox` #2 (`parseCOP`) llegó de triage a re-review **aprobada** con las skills de la fábrica (v0.4, `factory-server`
+  rama `factory-11/skills-fase-2`, 5 commits, sin remoto todavía). Falta: decidir "1,000 mil" y **merge del PR #11**.
+- La prueba sacó 9 defectos (2 de seguridad de proceso: una sesión de usuario aprobó en nombre de una persona; el builder construyó un
+  plan viejo). Todos corregidos o documentados. Conclusiones, modelos y mejoras en [[06-factory-primer-recorrido]].
+- Webhooks en local con `cloudflared tunnel --url http://localhost:4111` (URL temporal). `.env` con `MASTRACODE_PUBLIC_URL=http://localhost:4111`.
+- **Siguiente:** las 3 mejoras de prioridad alta (Build exige APROBAR, aislar la sandbox, token de revisión), modelo por defecto
+  Sonnet 5.5, más issues para medir, y subir `factory-server` a `alephart-co/factory-server`. Después, fase 3 (servidor).
+
+## 22/10 — FACTORY-11 fase 2: skills escritas, falta probarlas
+
+- En `factory-server` (sin commit todavía): `factory-triage`, `factory-plan` (+ plantilla), `factory-plan-review` (nueva) y
+  `factory-review`/`factory-rereview` generadas con `npm run skills:build`. Verificado con el código de Mastra que el servidor las sirve
+  (`npm run skills:list`) y que `tsc` pasa. Detalle y hallazgos en [[factory-server]]; uso en `factory-server/docs/factory-skills.md`.
+- **Cambio de diseño:** sin subagentes en la Factory, el plan-reviewer corre en una **sesión nueva** antes de pulsar Build.
+- **Siguiente:** commit en `factory-server`; reiniciar `pnpm dev`; *Auto-approve plans* apagado; recorrer un issue nuevo de
+  `factory-sandbox` con las skills nuevas. Sigue pendiente lo de la fase 1 (merge del PR #10, cerrar #9) y los webhooks (túnel o fase 3).
 
 ## 22/10 08:30 — FACTORY-11: fase 1 casi cerrada, sigue la fase 2
 
@@ -205,4 +224,5 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 ```
 Retomamos la software factory. Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md
 y el README del vault (la fábrica: ~/Projects/agenttic/software-factory), y dime dónde quedamos antes de seguir.
+Para FACTORY-11 conecta también ~/Projects/agenttic/factory-server.
 ```
