@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-21
+actualizado: 2026-10-23
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -30,6 +30,68 @@ Volver a [[README]]
   **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
+
+## 23/10 12:10 — traspaso a la fase 3 de FACTORY-11 (chat nuevo)
+
+**Dónde quedó:** fases 1 y 2 cerradas. Dos recorridos completos en `factory-sandbox` (#2 `parseCOP`, PR #11; #3 README, PR #12),
+el segundo ya con las mejoras de prioridad alta. Skills de la fábrica en v0.4/v0.5. Guía de operación y requisitos en
+`factory-server/docs/factory-skills.md`. Conclusiones en [[06-factory-primer-recorrido]].
+
+**Estado de los repos (todo local, sin subir):**
+- `factory-server`: ramas `factory-11/skills-fase-2` → `factory-11/mejoras-alta` (HEAD `46dc0c5`). **Sin remoto**: hay que crear
+  `alephart-co/factory-server` (privado) y subirlo.
+- `software-factory` (vault): rama `factory-11/fase-2` sin integrar a `master` (se integra con fast-forward).
+
+**Fase 3 — objetivo** (ver [[factory-server]]): Droplet dedicado en DigitalOcean (8 GB / 4 vCPU), Docker Compose (Postgres+pgvector,
+Redis), túnel fijo de Cloudflare a `factory.alephart.co`, WorkOS *Production*, respaldos diarios de Postgres, y el mismo flujo
+de `factory-sandbox` hasta Done en el servidor. Requisitos que salieron de la fase 2 y aplican en el servidor:
+- `MASTRACODE_PUBLIC_URL=https://factory.alephart.co` (sin ella ninguna review publica veredicto).
+- Webhook de la GitHub App a `https://factory.alephart.co/web/github/webhook` (ruta exacta); si hay Cloudflare Access, dejar pasar solo esa ruta.
+- *Auto-approve plans* apagado; *Auto-approve tools* se apaga con cada reinicio.
+- Etiquetas `plan:aprobado`, `status:auto-approved`, `status:changes-requested` en cada repo.
+- **Aislamiento real** de la sandbox (E2B o usuario del sistema dedicado): hoy solo tiene HOME propio. Requisito antes de productos.
+- GitHub App de producción (hoy `agenttic-factory-dev` es de desarrollo) y llave de Anthropic de organización con límite de gasto.
+- Modelo por defecto Sonnet 5.5; revisión del plan con Opus 5.5.
+
+**Pendientes chicos:** crear `status:auto-approved` y `status:changes-requested` en `factory-sandbox`; registrar el issue
+"formatCOP no valida el tipo" (hallazgo de la review del PR #12); cerrar el túnel temporal.
+**Anotado para después:** Plane ↔ GitHub (sección en [[06-factory-primer-recorrido]]). Los 3 issues urgentes de CC van por el flujo de CC, no por la Factory.
+
+## 23/10 11:45 — mejoras de prioridad alta
+
+- **Building exige `plan:aprobado`** (tablero Work propio) y **sandbox con HOME propio**: hechas y verificadas con el issue #3
+  (Build bloqueado sin etiqueta; revisión APROBAR la puso; PR #12 con autor `agenttic-factory-dev[bot]`). `factory-server` rama
+  `factory-11/mejoras-alta`. **Token de revisión separado:** bloqueado por Mastra 0.24 (mitigación de proceso documentada).
+- **Siguiente:** review y merge del PR #12; subir `factory-server` a `alephart-co/factory-server`; modelo por defecto Sonnet 5.5;
+  fase 3 (servidor, túnel fijo, aislamiento real). Plane ↔ GitHub queda anotado para cuando lleguemos.
+
+## 23/10 — FACTORY-11 fase 2 cerrada; dirección Plane ↔ GitHub
+
+- **PR #11 de factory-sandbox fusionado** tras re-review *approve* (37/37). Fase 2 cerrada; comentario en FACTORY-11.
+- **Plane ↔ GitHub (propuesta, sin módulo propio):** Plane Inbox como entrada y aceptación → etiqueta `github` → la integración nativa de
+  Plane crea el issue → la Factory lo toma. Comentarios bidireccionales = bitácora en Plane. Pendientes de Intake al cierre con
+  Claude Code + MCP (`intake create`). Detalle y lo que hay que validar en [[06-factory-primer-recorrido]].
+- **Siguiente:** spike Plane ↔ GitHub (plan Pro, una org por workspace, atribución de comentarios); mejoras de prioridad alta;
+  subir `factory-server` a `alephart-co/factory-server`; fase 3.
+
+## 22/10 23:15 — FACTORY-11 fase 2: recorrido completo con nuestras skills
+
+- `factory-sandbox` #2 (`parseCOP`) llegó de triage a re-review **aprobada** con las skills de la fábrica (v0.4, `factory-server`
+  rama `factory-11/skills-fase-2`, 5 commits, sin remoto todavía). Falta: decidir "1,000 mil" y **merge del PR #11**.
+- La prueba sacó 9 defectos (2 de seguridad de proceso: una sesión de usuario aprobó en nombre de una persona; el builder construyó un
+  plan viejo). Todos corregidos o documentados. Conclusiones, modelos y mejoras en [[06-factory-primer-recorrido]].
+- Webhooks en local con `cloudflared tunnel --url http://localhost:4111` (URL temporal). `.env` con `MASTRACODE_PUBLIC_URL=http://localhost:4111`.
+- **Siguiente:** las 3 mejoras de prioridad alta (Build exige APROBAR, aislar la sandbox, token de revisión), modelo por defecto
+  Sonnet 5.5, más issues para medir, y subir `factory-server` a `alephart-co/factory-server`. Después, fase 3 (servidor).
+
+## 22/10 — FACTORY-11 fase 2: skills escritas, falta probarlas
+
+- En `factory-server` (sin commit todavía): `factory-triage`, `factory-plan` (+ plantilla), `factory-plan-review` (nueva) y
+  `factory-review`/`factory-rereview` generadas con `npm run skills:build`. Verificado con el código de Mastra que el servidor las sirve
+  (`npm run skills:list`) y que `tsc` pasa. Detalle y hallazgos en [[factory-server]]; uso en `factory-server/docs/factory-skills.md`.
+- **Cambio de diseño:** sin subagentes en la Factory, el plan-reviewer corre en una **sesión nueva** antes de pulsar Build.
+- **Siguiente:** commit en `factory-server`; reiniciar `pnpm dev`; *Auto-approve plans* apagado; recorrer un issue nuevo de
+  `factory-sandbox` con las skills nuevas. Sigue pendiente lo de la fase 1 (merge del PR #10, cerrar #9) y los webhooks (túnel o fase 3).
 
 ## 22/10 08:30 — FACTORY-11: fase 1 casi cerrada, sigue la fase 2
 
@@ -203,6 +265,7 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory. Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md
-y el README del vault (la fábrica: ~/Projects/agenttic/software-factory), y dime dónde quedamos antes de seguir.
+Retomamos la software factory: FACTORY-11 fase 3 (servidor). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
+el README del vault, vault/03-modelo/factory-server.md y vault/06-lecciones/06-factory-primer-recorrido.md, y
+~/Projects/agenttic/factory-server/docs/factory-skills.md. Conecta las carpetas software-factory y factory-server.
 ```
