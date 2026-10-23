@@ -55,6 +55,18 @@ experiments/              pruebas sueltas (no son kit ni vault)
 - **Versión e historial** en cada pieza; un producto puede quedarse en una versión anterior.
 - **El producto se explica solo:** lo que se copia trae su propia documentación.
 
+## Código del kit
+
+El kit tiene código que se copia a los productos (`harness/`, `ci/scripts/`), así que sigue las mismas reglas que el código de un producto
+(preferencias globales de Juan Carlos):
+
+- Funcional y declarativo; legible y correcto antes que ingenioso. KISS y YAGNI: el kit resuelve lo que ya se necesitó en un caso real.
+- Separación de responsabilidades; constantes con nombre; lo que depende del producto o del entorno sale de configuración
+  (`*.example.json`, variables de entorno, marcadores como `__PROD_BRANCH__`), nunca escrito en el código.
+- Nombres: `camelCase` para funciones y variables, `PascalCase` para tipos, `kebab-case` para archivos.
+- TypeScript estricto y errores explícitos; pruebas de comportamiento; comentarios que explican el porqué.
+- Nunca credenciales ni datos de un cliente en el kit ni en sus ejemplos.
+
 ## Plane
 
 | Workspace | Acceso | Proyectos |
