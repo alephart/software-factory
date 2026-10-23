@@ -125,3 +125,13 @@ La [API de Intake](https://developers.plane.so/api-reference/intake-issue/overvi
   respuestas humanas (hoy solo cuentan comentarios de personas). Habría que reconocer la atribución de Plane.
 - La integración **crea etiquetas** que falten al otro lado (choca en espíritu con "no crear etiquetas"; es la integración, no el agente).
 - Que el issue creado desde Plane llegue a la Factory como cualquier otro (Intake del tablero Work).
+
+## Mejoras de prioridad alta (23/10)
+
+| Mejora | Estado | Cómo | Verificado con |
+|---|---|---|---|
+| Building exige el plan aprobado | **Hecha** | Tablero Work propio (`factory-server/src/mastra/boards/work-board.ts`): el de Mastra + regla "sin la etiqueta `plan:aprobado` no entra a Building". `factory-plan-review` la pone al aprobar, `factory-plan` la quita al publicar versión nueva; una persona puede ponerla a mano | Issue #3: Build sin etiqueta **bloqueado**; revisión APROBAR puso la etiqueta; Build pasó (PR #12). `npm run board:test` (9 casos + equivalencia con el tablero de Mastra) |
+| Sandbox sin el HOME del usuario | **Hecha (parcial)** | `HOME` propio para la sandbox local con identidad git del bot | PR #12: autor `agenttic-factory-dev[bot]` (antes `alephart`). Sigue siendo el mismo usuario del sistema: E2B o usuario dedicado antes de productos |
+| Token de revisión separado | **Bloqueada por Mastra 0.24** | No existe la opción: la misma App abre y revisa; GitHub no deja aprobar el PR propio | Mitigación: merge solo con `Verdict: approve` sobre el último head. Candidato a issue en `mastra-ai/mastra` |
+
+La etiqueta se llama `plan:aprobado` (convención con dos puntos, como `linea:*` y `causa:*`). Hay que crearla en cada repo; las skills no crean etiquetas.

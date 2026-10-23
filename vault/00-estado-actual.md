@@ -31,6 +31,14 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 23/10 11:45 — mejoras de prioridad alta
+
+- **Building exige `plan:aprobado`** (tablero Work propio) y **sandbox con HOME propio**: hechas y verificadas con el issue #3
+  (Build bloqueado sin etiqueta; revisión APROBAR la puso; PR #12 con autor `agenttic-factory-dev[bot]`). `factory-server` rama
+  `factory-11/mejoras-alta`. **Token de revisión separado:** bloqueado por Mastra 0.24 (mitigación de proceso documentada).
+- **Siguiente:** review y merge del PR #12; subir `factory-server` a `alephart-co/factory-server`; modelo por defecto Sonnet 5.5;
+  fase 3 (servidor, túnel fijo, aislamiento real). Plane ↔ GitHub queda anotado para cuando lleguemos.
+
 ## 23/10 — FACTORY-11 fase 2 cerrada; dirección Plane ↔ GitHub
 
 - **PR #11 de factory-sandbox fusionado** tras re-review *approve* (37/37). Fase 2 cerrada; comentario en FACTORY-11.
