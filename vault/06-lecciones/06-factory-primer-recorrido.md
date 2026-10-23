@@ -1,7 +1,7 @@
 ---
 tags: [leccion, factory-server, mastra, skills, nivel-4]
 creado: 2026-10-22
-estado: en-prueba
+estado: decidido
 item: FACTORY-11
 ---
 
@@ -11,7 +11,7 @@ Volver a [[README]] · Relacionado: [[factory-server]] · [[05-mastra-factory-pr
 
 `factory-sandbox` #2 (agregar `parseCOP`) recorrió la Factory local de punta a punta con las skills de la fábrica:
 triage → respuesta humana → plan v1 → revisión del plan (AJUSTAR) → plan v2 → revisión (AJUSTAR, aprobado por encima) →
-build → review (*request changes*) → corrección automática → re-review (*approve*). Falta el merge humano.
+build → review (*request changes*) → corrección automática → re-review (*approve*) → decisiones de producto → re-review (*approve*) → **merge** (23/10).
 Uso en `factory-server/docs/factory-skills.md`.
 
 ## Qué funcionó
@@ -84,3 +84,44 @@ Propuesta: por defecto **Sonnet 5.5**; revisión del plan con **Opus 5.5** (o So
 
 Issue #2: triage 18:48 → re-review aprobada 23:12 (~4,5 h de reloj, casi todo depuración y pausas humanas).
 Tiempo de agente por etapa: triage ~30 s · plan ~1 min · revisión del plan ~3–5 min · build ~1 min · review + corrección + re-review ~5 min.
+
+## Cierre (23/10)
+
+- Decisiones de producto aplicadas por el builder: "2m" → null, "1,000 mil" → null. El builder agregó una regla propia
+  (con escala, 3 dígitos tras la coma → null) que la re-review mostró como pregunta abierta; se mantiene por la ambigüedad real
+  con el separador de miles ("1,250 millones" puede ser 1,25 M o 1.250 M).
+- La re-review del último commit **no arrancó sola**: el túnel temporal se había caído y el evento se perdió en silencio.
+  Se lanzó desde la tarjeta (tablero Review → Review). Refuerza el túnel fijo de la fase 3.
+- Lección: **una regla nueva del builder es una decisión de producto escondida.** La review la detectó; hay que seguir pidiendo
+  que las decisiones queden como comentario de una persona en el issue.
+
+## Plane ↔ GitHub: dirección (23/10)
+
+**Problema.** La Factory trabaja sobre issues de GitHub; la fábrica usa Plane (Request en CC, Inbox en Agenttia) como puerta única.
+Y los "Para registrar en el Intake" que deja la Factory quedan como texto. Una herramienta propia Mastra ↔ Plane es trabajo que hoy no queremos.
+
+**Lo que trae Plane** ([integración con GitHub](https://docs.plane.so/integrations/github), plan Pro): sincronización por proyecto
+unidireccional (GitHub → Plane) o **bidireccional**; un work item con etiqueta `github` crea el issue en el repo enlazado (y un issue con
+etiqueta `plane` crea el work item); sincroniza título, descripción, estado, etiquetas, asignados (con usuarios mapeados) y **comentarios**;
+un PR con `[ID]` en el título o la descripción enlaza el work item y mueve su estado según el ciclo del PR. No menciona el Intake.
+La [API de Intake](https://developers.plane.so/api-reference/intake-issue/overview) permite crear, listar y actualizar ítems de Intake
+(estados: pendiente, rechazado, pospuesto, aceptado, duplicado); el MCP `plane-agenttia` ya lo expone (`intake create`).
+
+**Dirección propuesta (sin construir módulo):**
+1. **Entrada:** todo entra por el Inbox/Request de Plane (puerta única, sin cambios). Ahí se hace la aceptación de producto (¿es real? ¿lo queremos?).
+2. **Paso a la Factory:** al aceptar, el work item del proyecto de módulo lleva la etiqueta `github` → la integración crea el issue en el repo
+   → la Factory lo toma de GitHub. El triage técnico (`factory-triage`) sigue en la Factory.
+3. **Bitácora en Plane gratis:** con sincronización bidireccional de comentarios, el triage, el plan, las revisiones y las respuestas
+   quedan también en el work item de Plane (el "comentario por fase" sin trabajo manual).
+4. **Estado automático:** la plantilla de plan pide `[ID de Plane]` en el título del PR, para que Plane mueva el estado con el ciclo del PR.
+5. **Pendientes al Intake:** al cierre (merge), Claude Code lee "Para registrar en el Intake" del PR y propone `intake create` en Plane;
+   una persona aprueba cada uno. API directa o herramienta propia en la Factory solo si el volumen lo justifica.
+
+**A validar en un spike corto antes de adoptarlo:**
+- Que el workspace de Plane tenga plan **Pro** (o el que exija la integración).
+- **Una organización de GitHub solo puede conectarse a un workspace de Plane**: `Alephart-Co` no podría servir a la vez a `agenttia` y a
+  `conversion-chat`. Decidir qué repos van en qué organización (o qué workspace manda).
+- **Cómo llegan a GitHub los comentarios escritos en Plane**: si los publica el bot de la integración, nuestras skills no los tratarían como
+  respuestas humanas (hoy solo cuentan comentarios de personas). Habría que reconocer la atribución de Plane.
+- La integración **crea etiquetas** que falten al otro lado (choca en espíritu con "no crear etiquetas"; es la integración, no el agente).
+- Que el issue creado desde Plane llegue a la Factory como cualquier otro (Intake del tablero Work).

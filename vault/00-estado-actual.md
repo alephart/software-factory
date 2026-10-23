@@ -31,6 +31,15 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 23/10 — FACTORY-11 fase 2 cerrada; dirección Plane ↔ GitHub
+
+- **PR #11 de factory-sandbox fusionado** tras re-review *approve* (37/37). Fase 2 cerrada; comentario en FACTORY-11.
+- **Plane ↔ GitHub (propuesta, sin módulo propio):** Plane Inbox como entrada y aceptación → etiqueta `github` → la integración nativa de
+  Plane crea el issue → la Factory lo toma. Comentarios bidireccionales = bitácora en Plane. Pendientes de Intake al cierre con
+  Claude Code + MCP (`intake create`). Detalle y lo que hay que validar en [[06-factory-primer-recorrido]].
+- **Siguiente:** spike Plane ↔ GitHub (plan Pro, una org por workspace, atribución de comentarios); mejoras de prioridad alta;
+  subir `factory-server` a `alephart-co/factory-server`; fase 3.
+
 ## 22/10 23:15 — FACTORY-11 fase 2: recorrido completo con nuestras skills
 
 - `factory-sandbox` #2 (`parseCOP`) llegó de triage a re-review **aprobada** con las skills de la fábrica (v0.4, `factory-server`

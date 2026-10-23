@@ -78,4 +78,5 @@ de la Factory. Se derivaron de ellos y desde ahora son de `factory-server`, con 
 prevalece sobre la de Mastra (CI solo informa).
 
 **Probado el 22/10** (skills hasta v0.4): recorrido completo de `factory-sandbox` #2, con túnel temporal de Cloudflare para los webhooks.
-Resultados, defectos corregidos, modelos y mejoras en [[06-factory-primer-recorrido]]. Falta para cerrar la fase 2: merge del PR #11.
+Resultados, defectos corregidos, modelos y mejoras en [[06-factory-primer-recorrido]]. **Fase 2 cerrada el 23/10** con el merge del PR #11.
+Dirección para integrar Plane sin construir módulo: misma nota, sección "Plane ↔ GitHub".
