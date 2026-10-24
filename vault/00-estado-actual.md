@@ -31,6 +31,32 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 24/10 10:00 — gate `factory-verdict` probado (camino feliz)
+
+- Cuentas de GitHub decididas: CC se queda en `alephart` (sin transferir); fábrica y Agenttia en `Alephart-Co`. Team cuando Agenttia reciba PRs de la Factory.
+  **La Factory no entra a CC** hasta tener gate que bloquee (Pro personal) y la App en *Any account*.
+- `factory-sandbox` ahora es **público** (historial y comentarios auditados). Workflow `factory-verdict` (PR #13) + ruleset `main protegido`.
+- Recorrido issue #14 → PR #15: merge **bloqueado** sin review y **habilitado** solo con `Verdict: approve` sobre el último head. Detalle en [[consolidacion-2026-10-23]].
+- **Pendiente de probar del gate:** *request changes* (rojo y escalado a las 2 rondas) y commit nuevo tras *approve* (vuelve a *pending*). Renombrar el job a `publicar-estado`.
+- Nuevo issue en el sandbox: notación exponencial en `formatCOP` (hallazgo del PR #15).
+- **Decisión B tomada (24/10 tarde):** Plane decide el qué y el si; GitHub el cómo. Labels `destino:factory|persona|decision` (Plane) y `origen:plane` (GitHub);
+  skills `plane-to-factory` y `factory-to-plane` en el kit (prioridad baja: primero la línea en la DoD); proyecto SANDBOX en Plane; Nicole colaboradora del repo.
+  Detalle en [[consolidacion-2026-10-23]].
+- **Por hacer de B:** crear SANDBOX en Plane y los labels `destino:*` (por proyecto); `origen:plane` en `factory-sandbox`; invitar a Nicole; línea nueva en la DoD.
+- **Decisión D tomada:** Railway con autodeploy + *Wait for CI*, en un solo ítem de CC junto con REQUEST-9 (vence 2026-12-01). Por el flujo de CC.
+- **DoD v0.3:** línea de "Para registrar en el Intake".
+- **Requisito de seguridad nuevo:** las skills solo cuentan comentarios de autores con permiso (Mastra ya filtra los disparadores; nuestras skills leen todo el hilo).
+  Ya: *Interaction limits* en `factory-sandbox`. Nicole se invita por email con rol *Triage*.
+- **Decisión C tomada:** Sentry Developer solo en `apps/agent`, una organización por producto, región US, sin contenido de conversaciones, alertas mínimas;
+  al Intake con la skill `sentry-to-plane` (Gmail + MCP de Sentry, con OK). Ítem de CC después de D/REQUEST-9.
+- **Las cinco decisiones (A–E) quedaron cerradas.** Siguiente: plan final consolidado. Sigue la fase 3 del servidor (runbook) en paralelo.
+
+## 23/10 23:05 — consolidación de investigaciones (este chat sigue con la decisión A)
+
+- Nota nueva: [[consolidacion-2026-10-23]]. La arquitectura se mantiene; quedan cinco decisiones (A gate de merge, B Plane ↔ GitHub
+  con ambos workspaces en Free, C Sentry, D Railway fuera del gate, E infraestructura confirmada con E2B como gate duro).
+- **En curso: A.** Check obligatorio `factory-verdict` + que los checks bloqueen (depende del plan de GitHub de cada producto).
+
 ## 23/10 22:55 — FACTORY-11 fase 3: despliegue escrito, falta montar el servidor (chat nuevo)
 
 **Dónde quedó:**

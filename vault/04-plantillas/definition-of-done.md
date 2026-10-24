@@ -1,8 +1,8 @@
 ---
 tags: [plantilla, nivel-2, nivel-3, done]
-version: 0.2
+version: 0.3
 creado: 2026-10-03
-actualizado: 2026-10-10
+actualizado: 2026-10-24
 estado: en-prueba
 ---
 
@@ -21,6 +21,7 @@ Volver a [[README]] · Flujo: [[flujo-planning-a-done]] · Origen de la v0.2: [[
 - [ ] Si vino de Request: comentario en el ítem padre
 - [ ] **Esfuerzo humano** anotado (horas aproximadas de atención humana, no de agentes):
   `Esfuerzo humano: triage Xh · planning Xh · building Xh · review Xh · salida Xh — estimado: N puntos`
+- [ ] Los “Para registrar en el Intake” del PR quedaron registrados en Plane o descartados con motivo
 
 ## Si cambia el runtime de un agente o la plataforma
 
@@ -91,3 +92,4 @@ Volver a [[README]] · Flujo: [[flujo-planning-a-done]] · Origen de la v0.2: [[
 |---|---|---|
 | 0.1 | 2026-10-03 | Primera versión |
 | 0.2 | 2026-10-10 | Ajuste del mismo día: sin versionado de prompts por ahora; el texto final va en el comentario de cierre. Retro del caso 1: esfuerzo humano al cerrar; sección de runtime/plataforma (plan en repo, cc-staging, runbook, rollback); gate de regresión 3 + 10 corridas con regla previa; holdout (suite visible con CODEOWNERS + set fuera del repo); tipo infraestructura |
+| 0.3 | 2026-10-24 | Común a todos: los "Para registrar en el Intake" del PR quedan registrados en Plane o descartados con motivo (el riesgo es el olvido, no el tiempo; ver [[consolidacion-2026-10-23]], decisión B) |
