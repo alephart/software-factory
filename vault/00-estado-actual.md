@@ -49,7 +49,7 @@ Volver a [[README]]
   Ya: *Interaction limits* en `factory-sandbox`. Nicole se invita por email con rol *Triage*.
 - **Decisión C tomada:** Sentry Developer solo en `apps/agent`, una organización por producto, región US, sin contenido de conversaciones, alertas mínimas;
   al Intake con la skill `sentry-to-plane` (Gmail + MCP de Sentry, con OK). Ítem de CC después de D/REQUEST-9.
-- **Las cinco decisiones (A–E) quedaron cerradas.** Siguiente: plan final consolidado. Sigue la fase 3 del servidor (runbook) en paralelo.
+- **Las cinco decisiones (A–E) quedaron cerradas.** **Plan desde el 24/10:** [[plan-fabrica-2026-10-24]] (bloques 0–5, dependencias, fechas y criterios de salida). Siguiente: bloque 0.
 
 ## 23/10 23:05 — consolidación de investigaciones (este chat sigue con la decisión A)
 
