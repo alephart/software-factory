@@ -31,6 +31,40 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 23/10 22:55 — FACTORY-11 fase 3: despliegue escrito, falta montar el servidor (chat nuevo)
+
+**Dónde quedó:**
+- `factory-server` **ya está en GitHub** (`Alephart-Co/factory-server`): `master` con mejoras de prioridad alta (PR #1),
+  `dependences-control` (PR #3) y `AGENTS.md` (PR #4). Rama **`factory-11/fase-3`** subida, 2 commits, **sin PR**:
+  `deploy/` (Dockerfile, Compose de producción, plantillas `.env` y `app.env`, `backup.sh`) y `docs/runbook-servidor.md`
+  (de crear el Droplet a ver Done, con casillas).
+- Vault: `factory-11/fase-2` y `docs/agents-md` siguen sin integrar a `master`; esta nota va en `factory-11/fase-3` (sale de `docs/agents-md`).
+
+**Decisiones del 23/10** (detalle en [[factory-server]], sección "Fase 3"):
+- **Postgres en el Droplet**, no Supabase. Supabase serviría (pgvector), pero con conexión directa o *Session pooler* (Mastra usa
+  *advisory locks*), org propia y plan Pro; se descarta por costo, latencia y porque es estado de la Factory, no de un producto.
+- **Sin Redis:** un solo proceso, igual que en la fase 2. Se agrega con `REDIS_URL` si llegan varias réplicas.
+- **Túnel con nombre:** `cloudflared` como servicio del Compose con el token del túnel; ningún puerto abierto salvo SSH.
+  Sin Cloudflare Access en esta fase (WorkOS ya exige login).
+- **Sandbox local en la fase 3**, solo `factory-sandbox`. E2B (ya soportado con `E2B_API_KEY`, sin cambiar código) **antes de
+  instalar la App en cualquier repo de producto**, no "al salir a prod".
+- **La App de `Alephart-Co` no obliga a mudar productos:** con *Any account* se instala en la cuenta de CC o Agenttia (fase 4).
+  Principio de entrega intacto.
+- **Parches del SO** con `unattended-upgrades` (reinicio automático 04:30 Bogotá) y actualización mensual de imágenes.
+- **NVIDIA Inception y DigitalOcean Hatch:** revisados, no se aplica por ahora (no descartado). Hatch no cubre Anthropic ni GPU;
+  los dos excluyen consultoras y estudios de desarrollo: si se aplica, como empresa de producto (Agenttia, CC).
+
+**Siguiente:**
+1. Paso 0 del runbook en el Mac: `docker compose -f deploy/docker-compose.prod.yml build app` (la imagen **no se ha probado**).
+   Confirmar al arrancar que `varlock` toma el entorno del contenedor y que la llave PEM llega bien desde `app.env`.
+2. PR de `factory-11/fase-3` en `factory-server` y merge.
+3. Runbook, secciones 1–6: Droplet, túnel, WorkOS *Production*, GitHub App de producción, workspace `factory` de Anthropic,
+   respaldo y recorrido hasta Done.
+4. Integrar el vault a `master` (`factory-11/fase-2` → `docs/agents-md` → `factory-11/fase-3`).
+
+**Pendientes chicos (sin cambios):** etiquetas `status:*` en `factory-sandbox`, issue "formatCOP no valida el tipo" (sirve como
+issue del recorrido de prueba), cerrar el túnel temporal.
+
 ## 23/10 12:10 — traspaso a la fase 3 de FACTORY-11 (chat nuevo)
 
 **Dónde quedó:** fases 1 y 2 cerradas. Dos recorridos completos en `factory-sandbox` (#2 `parseCOP`, PR #11; #3 README, PR #12),
@@ -266,6 +300,6 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 
 ```
 Retomamos la software factory: FACTORY-11 fase 3 (servidor). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
-el README del vault, vault/03-modelo/factory-server.md y vault/06-lecciones/06-factory-primer-recorrido.md, y
-~/Projects/agenttic/factory-server/docs/factory-skills.md. Conecta las carpetas software-factory y factory-server.
+el README del vault, vault/03-modelo/factory-server.md y ~/Projects/agenttic/factory-server/docs/runbook-servidor.md
+(rama factory-11/fase-3 o master si ya se fusionó). Conecta las carpetas software-factory y factory-server.
 ```
