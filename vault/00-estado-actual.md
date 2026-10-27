@@ -31,6 +31,17 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 26/10 22:30 — bloque 0 en marcha
+
+- **Hecho por Juan Carlos desde el 24/10:** `origen:plane` en `factory-sandbox`; pie de atribución quitado del PR #13; segundo recorrido feliz
+  (issue #16 notación exponencial → PR #17, `factory-verdict` en verde por approve). Aún **sin probar** *request changes* ni commit tras approve.
+- **0.2 hecho (falta push y PR):** `factory-server` rama `factory-11/confianza-skills` (commit `bbbdb0f`): `factory-plan` 0.6, `factory-plan-review` 0.5,
+  `factory-triage` 0.5 verifican el permiso del autor o "Decisores de producto" en `AGENTS.md`. `skills:test` OK.
+- **0.3 hecho (falta PR):** rama `renombrar-job-verdict` en `factory-sandbox` (subida): job → `publicar-estado`; el estado sigue siendo `factory-verdict`.
+- **Pendiente del bloque 0:** *Interaction limits* (0.1, no estaba activo), SANDBOX y `destino:*` en Plane, invitar a Nicole, integrar ramas a `master` (0.6),
+  sección "Decisores de producto" en el `AGENTS.md` de `factory-sandbox` cuando Nicole acepte.
+- **Siguiente:** bloque 1 (fase 3), paso 0 del runbook: construir la imagen en el Mac.
+
 ## 24/10 10:00 — gate `factory-verdict` probado (camino feliz)
 
 - Cuentas de GitHub decididas: CC se queda en `alephart` (sin transferir); fábrica y Agenttia en `Alephart-Co`. Team cuando Agenttia reciba PRs de la Factory.
@@ -46,7 +57,7 @@ Volver a [[README]]
 - **Decisión D tomada:** Railway con autodeploy + *Wait for CI*, en un solo ítem de CC junto con REQUEST-9 (vence 2026-12-01). Por el flujo de CC.
 - **DoD v0.3:** línea de "Para registrar en el Intake".
 - **Requisito de seguridad nuevo:** las skills solo cuentan comentarios de autores con permiso (Mastra ya filtra los disparadores; nuestras skills leen todo el hilo).
-  Ya: *Interaction limits* en `factory-sandbox`. Nicole se invita por email con rol *Triage*.
+  Pendiente: *Interaction limits* en `factory-sandbox` (al 26/10 **no** estaba activo). Nicole se invita por email con rol *Triage*.
 - **Decisión C tomada:** Sentry Developer solo en `apps/agent`, una organización por producto, región US, sin contenido de conversaciones, alertas mínimas;
   al Intake con la skill `sentry-to-plane` (Gmail + MCP de Sentry, con OK). Ítem de CC después de D/REQUEST-9.
 - **Las cinco decisiones (A–E) quedaron cerradas.** **Plan desde el 24/10:** [[plan-fabrica-2026-10-24]] (bloques 0–5, dependencias, fechas y criterios de salida). Siguiente: bloque 0.
