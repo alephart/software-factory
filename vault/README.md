@@ -65,6 +65,7 @@ No se trata de demostrar que un equipo pequeño iguala a uno grande. Se trata de
 | 2026-10-10 | **Caso 1 en producción** (PR #223, release 0.13.0). PLATFORM-59 en Done; etapa B → PLATFORM-62. IMEC aprueba en staging; la tool se habilita con su Go. Fibonacci activa en Plane. |
 | 2026-10-11 | cc-staging completo (PLATFORM-62), **CI y releases automáticos** (PLATFORM-63, v0.13.2), suites v2 aprobadas por producto, ADR 036/037. Primer ítem con Fibonacci (BOOKING-10). |
 | 2026-10-12 | Estructura fábrica/productos y principio de entrega sin la fábrica. CC PLATFORM-60 reescrito como caso 2. Acceso a Plane de Agenttia; proyecto **FACTORY** creado con 9 ítems estimados. |
+| 2026-10-21/23 | FACTORY-11: decisión de Mastra Factory autoalojada; fases 1 y 2 en local (dos recorridos completos con nuestras skills, mejoras de prioridad alta); despliegue de la fase 3 escrito (Docker Compose, túnel, respaldos, runbook). |
 | — | Siguiente: FACTORY-5 (regla de puerta única), FACTORY-1 y 2 (molde), y el plan de CC PLATFORM-60. |
 
 ## Pendientes estratégicos

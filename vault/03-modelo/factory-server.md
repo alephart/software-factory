@@ -36,7 +36,7 @@ Volver a [[README]] · Relacionado: [[fabrica-y-productos]] · [[05-mastra-facto
 
 1. **Local:** crear `factory-server` sin plataforma, GitHub App propia, un issue de `factory-sandbox` hasta Done con las skills de Mastra.
 2. **Nuestras skills:** triage con aprobación humana y sin crear etiquetas, plan con nuestra plantilla, plan-reviewer independiente, review con reglas del repo. **Escritas el 22/10** (ver abajo); falta probarlas con un issue.
-3. **Servidor:** Droplet + Docker Compose + túnel + Access + respaldos; el mismo issue de prueba hasta Done.
+3. **Servidor:** Droplet + Docker Compose + túnel + respaldos; el mismo issue de prueba hasta Done. **Despliegue escrito el 23/10** (ver abajo); falta montarlo.
 4. **Primer producto:** con E2B, Agenttia (caso 2).
 
 ## Lecciones de la fase 1 (local, 22/10)
@@ -80,3 +80,29 @@ prevalece sobre la de Mastra (CI solo informa).
 **Probado el 22/10** (skills hasta v0.4): recorrido completo de `factory-sandbox` #2, con túnel temporal de Cloudflare para los webhooks.
 Resultados, defectos corregidos, modelos y mejoras en [[06-factory-primer-recorrido]]. **Fase 2 cerrada el 23/10** con el merge del PR #11.
 Dirección para integrar Plane sin construir módulo: misma nota, sección "Plane ↔ GitHub".
+
+## Fase 3 — servidor (23/10: despliegue escrito, sin montar)
+
+En `factory-server`, rama `factory-11/fase-3`: `deploy/` y `docs/runbook-servidor.md` (el runbook es la guía paso a paso).
+
+| Pieza | Cómo |
+|---|---|
+| Imagen | `deploy/Dockerfile`: Node 22 + git + `gh` + pnpm, usuario `node`. **No se construye** si fallan `skills:test` o `board:test` |
+| Servicios | `deploy/docker-compose.prod.yml`: `app` (4111 interno), `db` (`pgvector/pgvector:pg18`), `tunnel` (`cloudflared` con token). Sin puertos publicados |
+| Secretos | Dos archivos: `deploy/.env` (Compose: Postgres, túnel) y `deploy/app.env` (app). Los críticos con copia en el gestor de contraseñas |
+| Sandbox | Local dentro del contenedor, con clones y HOME en el volumen `/data`; tope de 3 sandboxes |
+| Respaldo | `deploy/backup.sh`: `pg_dump` diario por cron, 14 días, copia a Spaces con rclone; restauración probada en base aparte |
+| SO | `unattended-upgrades` con reinicio automático; imágenes actualizadas cada mes |
+
+**Desvíos frente a la decisión del 21/10:**
+- **Sin Redis.** El servidor es un solo proceso (así se probó la fase 2); Redis Streams solo hace falta con varias réplicas.
+- **Sin Cloudflare Access** en esta fase: WorkOS ya exige login. Si se agrega, *Bypass* solo para `/web/github/webhook`.
+- **Postgres confirmado en el Droplet** tras evaluar Supabase: serviría, pero exige *Session pooler* o conexión directa
+  (Mastra usa *advisory locks*, incompatibles con el pooler de transacciones), org propia y plan Pro.
+- "Droplet dedicado" = dedicado a la Factory (Basic 8 GB / 4 vCPU), no CPU dedicada.
+
+**Riesgo aceptado en la fase 3:** con la sandbox local, un agente corre en el mismo contenedor que la app y podría leer sus secretos
+(llave de la GitHub App, WorkOS, llave de cifrado). Aceptable solo con `factory-sandbox`. E2B va antes de instalar la App en cualquier
+repo de producto; para eso la App pasa a *Any account* y se instala en la cuenta del producto, sin mudar el repo.
+
+**Sin probar todavía:** la construcción de la imagen, `varlock run` con el entorno del contenedor y la llave PEM en `app.env`.
