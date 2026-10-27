@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-23
+actualizado: 2026-10-27
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,24 +12,26 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos
+## Dónde estamos (27/10)
 
-- **Piloto:** Conversion Chat (`master` = producción). **Core futuro:** Agenttia.
-- **Flujo de ramas vigente:** `feature → cc-stage → master`, con `cc-staging` como entorno previo a prod
-  (Supabase `cc-staging`, Railway `cc-agent`, Workers `stg.*`; admin detrás de Cloudflare Access). Documentado en `docs/ENVIRONMENTS.md`.
-- **Caso 1 (precios de IMEC):** **en producción desde el 10/10** (PR #223, merge commit `04dfb95`; release 0.13.0).
-  La tool `get_catalog_price` sigue **apagada** en ORIANA de prod: IMEC probó en staging y aprobó; se habilita con el Go del cliente.
-- **Fábrica:** el caso 1 es el primer ítem que recorre el flujo completo. Retrospectiva medida en
-  [[04-caso-1-retrospectiva]]. Estándares nuevos del 10/10: [[definition-of-done]] v0.2, [[triage]] v0.4,
-  [[runbook-salida-a-prod]], [[comentario-por-fase]]; Fibonacci activa en Plane.
+**Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
+El historial de sesiones está abajo, de la más nueva a la más vieja.
 
-## 21/10 — al retomar (pausa del 13 al 20/10)
+| Frente | Estado |
+|---|---|
+| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 (servidor) en curso:** imagen probada en local; se prueba **Railway** (workspace propio) antes del Droplet. Runbook: `factory-server/docs/runbook-railway.md` |
+| **Gate de merge** | `factory-verdict` obligatorio en `factory-sandbox` (público, ruleset sin bypass). Camino feliz probado 2 veces (PRs #15 y #17). Falta *request changes*, 2 rondas y commit tras *approve* |
+| **Skills** | Regla de confianza (solo comentarios de personas con permiso) en `factory-server` rama `factory-11/confianza-skills`, sin PR |
+| **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
+| **CC** | Piloto en producción. Ítem **D + REQUEST-9** (Railway con *Wait for CI*, Config as Code vence el **2026-12-01**) y después **C (Sentry)**, por el flujo de CC. Congelado 23–28/11 (congreso de EMA). REQUEST-10 (EMA) en curso por el flujo de CC |
+| **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
-- **CC:** canal de EMA en producción. Para el Go de IMEC se agregó `request_advisor` (aviso a un asesor sin pausar al agente),
-  con ADR 038 y suite de ORIANA v2 probada con el arnés (PR #239, en `cc-stage`; `cc-stage` va 9 commits adelante de `master`).
-  **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
-- **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
-  en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
+**Siguiente (en orden):**
+1. `podman run --rm node:22-bookworm-slim which setpriv` (lo usa `deploy/railway-start.sh`).
+2. Push de `factory-11/fase-3` y `factory-11/confianza-skills` en `factory-server`; PRs y merge (Railway construye desde `master`).
+3. *Interaction limits* en `factory-sandbox` ("Limit to repository collaborators", 6 meses): **aún no activo** al 26/10.
+4. Runbook de Railway desde la sección 1.
+5. Push de este vault (`factory-11/fase-3`) y PR a `master` (incluye `factory-11/fase-2` y `docs/agents-md`).
 
 ## 26/10 23:55 — fase 3: se prueba Railway antes del Droplet
 
@@ -192,6 +194,14 @@ de `factory-sandbox` hasta Done en el servidor. Requisitos que salieron de la fa
   recorrerlo esperando entre etapas (en local sin webhooks la sincronización tarda 1–5 min) y hacer el merge solo después del Review.
 - Lección: en local, no tocar GitHub a mano mientras la tarjeta avanza.
 
+## 21/10 — al retomar (pausa del 13 al 20/10)
+
+- **CC:** canal de EMA en producción. Para el Go de IMEC se agregó `request_advisor` (aviso a un asesor sin pausar al agente),
+  con ADR 038 y suite de ORIANA v2 probada con el arnés (PR #239, en `cc-stage`; `cc-stage` va 9 commits adelante de `master`).
+  **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
+- **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
+  en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
+
 ## 11/10 — lo que avanzó (Claude Code, cotejado en GitHub y Plane)
 
 - **PLATFORM-62 Done:** cc-staging completo (portal y agenda sin workers.dev, Access solo en el admin, desvío de correos con `EMAIL_REDIRECT_TO`,
@@ -333,19 +343,13 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 
 ## Próximos pasos de la fábrica
 
-0. **Separar cuentas de CC y Agenttia** (prerrequisito del principio de entrega): org de Supabase de cc-staging, environment `staging` de Agenttia en el Railway de CC.
-1. **Higiene (una tanda de Claude Code):** subir `cc-stage` a master (ADR 036/037, runbook ejecutado); corregir la línea del ADR 034 a "ver ADR 038";
-   plan v2.2 de PLATFORM-59 al repo; `plan-reviewer-agent` al repo; CODEOWNERS de `apps/agent/scripts/regression/`.
-2. **Decidir la regla de la puerta única** para hallazgos en caliente y borrar REQUEST-19.
-3. **Triage por lotes con Fibonacci:** Request 2, 4–7, 9–18 + los ítems directos del 11/10. Primero lo que tiene fecha o es alto: REQUEST-9 (Railway, 01/12), 10 y 17.
-4. **Caso 2 con los estándares nuevos** (puntos al triar, horas al cerrar, DoD v0.2): es el "después" del artículo.
-5. Horas del caso 1 (tabla A/B/C, pendiente) y habilitar ORIANA con el Go de IMEC.
-6. ADR 038 (conocimiento) · PLATFORM-60 (Agenttia) · artículo, estructura v2.
+Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde estamos" (arriba). La lista del 12/10 queda en el historial de git.
 
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory: FACTORY-11 fase 3 (servidor). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
-el README del vault, vault/03-modelo/factory-server.md y ~/Projects/agenttic/factory-server/docs/runbook-servidor.md
-(rama factory-11/fase-3 o master si ya se fusionó). Conecta las carpetas software-factory y factory-server.
+Retomamos la software factory: FACTORY-11 fase 3 (servidor en Railway). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
+el README del vault, vault/03-modelo/plan-fabrica-2026-10-24.md, vault/03-modelo/consolidacion-2026-10-23.md y
+~/Projects/agenttic/factory-server/docs/runbook-railway.md (rama factory-11/fase-3 o master si ya se fusionó).
+Conecta las carpetas software-factory y factory-server.
 ```
