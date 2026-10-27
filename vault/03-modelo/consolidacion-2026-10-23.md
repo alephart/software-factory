@@ -46,7 +46,25 @@ Fuentes: [ByteByteGo — Stripe Minions](https://blog.bytebytego.com/p/how-strip
 | B | **Plane ↔ Factory** | **Decidida (24/10)** | Ambos workspaces en Free (sin integración nativa). Plane decide el qué y el si (triage de producto); GitHub el cómo (triage técnico y todo lo demás). Puente con dos skills del kit corridas por Claude Code. Ver "Decisión B" |
 | C | **Sentry** | **Decidida (24/10)** | Solo `apps/agent` de CC, plan Developer (gratis), una organización de Sentry por producto, región US, privacidad de entrada, alertas mínimas. Ver "Decisión C" |
 | D | **Railway dentro del gate** | **Decidida (24/10)** | Autodeploy desde GitHub con *Wait for CI*, junto con REQUEST-9 (Config as Code). Ver "Decisión D" |
-| E | **Infraestructura de la SF** | Confirmada | Droplet dedicado, Postgres en el Droplet, sin Redis, túnel con nombre, `unattended-upgrades`. **E2B como gate duro** antes de instalar la App en cualquier repo de producto |
+| E | **Infraestructura de la SF** | **Revisada (26/10): prueba en Railway** | Primero se prueba Railway en un workspace propio de la Factory (sin nada de CC), con nuestro `deploy/Dockerfile`; el Droplet queda como alternativa. E2B sigue siendo gate duro antes de productos. Ver "Revisión de E" |
+
+## Revisión de E (26/10): probar en Railway antes del Droplet
+
+**Por qué se descartó el 23/10:** costo (el sandbox local corre builds dentro del contenedor y Railway cobra por uso) y separación (la cuenta de
+Railway tiene el runtime de CC en producción). **No fue por Docker:** Railway construye desde nuestro `deploy/Dockerfile`.
+
+**Qué cambió:** la separación se cumple con un **workspace de Railway propio de la Factory**. El costo se reevaluó con el uso real: pocos recorridos
+al día en el sandbox, contenedor casi siempre en reposo y cobro por segundo; con E2B (requisito de la fase 4) los builds salen del contenedor.
+Probablemente cueste menos que los ~USD 48 fijos del Droplet; se mide en la primera semana, con límite duro de uso en el workspace.
+A favor, además: sin parches del sistema, Docker, SSH ni firewall con IP cambiante; sin túnel (Railway publica el dominio con TLS); backups de volumen nativos.
+
+**Template de terceros descartado** (`railway.com/deploy/mastra-factory`, de Auromations): corre una imagen de terceros con acceso a la llave de la
+GitHub App, WorkOS y Anthropic (riesgo de cadena de suministro), no trae nuestras skills ni el tablero con `plan:aprobado`, y pide un token clásico con `repo`.
+
+**Detalle técnico:** Railway monta los volúmenes como root; `deploy/railway-start.sh` prepara `/data` con `RAILWAY_RUN_UID=0` y arranca el servidor como `node`.
+
+**Runbook:** `factory-server/docs/runbook-railway.md`. **Criterios para volver al Droplet:** costo semanal proyectado mayor, problemas con el volumen
+o la red privada, o caídas que afecten los recorridos.
 
 ## Decisión C (24/10): Sentry
 

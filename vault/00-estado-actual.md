@@ -31,6 +31,15 @@ Volver a [[README]]
 - **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
   en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
+## 26/10 23:55 — fase 3: se prueba Railway antes del Droplet
+
+- Paso 0 hecho: la imagen se construye en local (podman, arm64): `skills:test`, `board:test` y `build` en verde. Falta probar el **arranque** (varlock, llave PEM).
+- **Revisión de E:** primero Railway, en un workspace propio de la Factory, con nuestro Dockerfile; Droplet como alternativa. Ver [[consolidacion-2026-10-23]].
+- `factory-server` rama `factory-11/fase-3`: `deploy/railway-start.sh` y `docs/runbook-railway.md` (commit `51a54ff`); ruta nueva del túnel en el runbook del Droplet (`c582eaf`). Falta push.
+- Túnel de Cloudflare creado ("Factory Agenttia in alephart.co"): **sobra si Railway funciona** (borrarlo).
+- *Interaction limits*: en `factory-sandbox` todavía no estaba activo al 26/10 (opción "Limit to repository collaborators", 6 meses).
+- **Siguiente:** push y merge de `factory-11/fase-3` y `factory-11/confianza-skills`; runbook de Railway desde la sección 1.
+
 ## 26/10 22:30 — bloque 0 en marcha
 
 - **Hecho por Juan Carlos desde el 24/10:** `origen:plane` en `factory-sandbox`; pie de atribución quitado del PR #13; segundo recorrido feliz
