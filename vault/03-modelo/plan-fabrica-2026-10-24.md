@@ -71,6 +71,7 @@ Si el formato del comentario de *request changes* no coincide con el que espera 
 | # | Qué | Depende de | Hecho cuando |
 |---|---|---|---|
 | 4.1 | **E2B** (aislamiento real de la sandbox, `E2B_API_KEY`) | Bloque 1 | Un recorrido del sandbox corre en E2B; el agente no ve los secretos del servidor |
+| 4.1b | **Respaldo de la base de la Factory:** cron en Railway con `pg_dump` diario a Cloudflare R2 (o workspace en Pro) | Bloque 1 | Respaldo diario fuera de Railway y una restauración probada |
 | 4.2 | Repo de Agenttia en `Alephart-Co` (CC PLATFORM-60, caso 2) | — | Repo con su CI, AGENTS.md y entornos propios |
 | 4.3 | **Team en `Alephart-Co`** + ruleset en Agenttia (`factory-verdict` + CI, sin bypass) | 4.2 | El merge queda bloqueado sin *approve* también en un repo privado |
 | 4.4 | App de la Factory en el repo de Agenttia; etiquetas; `FACTORY_BOT_LOGIN` | 4.1, 4.3 | Primer ítem de Agenttia: Plane (`destino:factory`) → issue → Done |

@@ -19,7 +19,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 | Frente | Estado |
 |---|---|
-| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 (servidor) en curso:** imagen probada en local; se prueba **Railway** (workspace propio) antes del Droplet. Runbook: `factory-server/docs/runbook-railway.md` |
+| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 (servidor) en curso en Railway:** workspace Factory, Postgres arriba; sigue el servicio `factory` y las cuentas externas. Runbook: `factory-server/docs/runbook-railway.md` |
 | **Gate de merge** | `factory-verdict` obligatorio en `factory-sandbox` (público, ruleset sin bypass). Camino feliz probado 2 veces (PRs #15 y #17). Falta *request changes*, 2 rondas y commit tras *approve* |
 | **Skills** | Regla de confianza (solo comentarios de personas con permiso) en `factory-server` rama `factory-11/confianza-skills`, sin PR |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
@@ -32,6 +32,16 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 3. *Interaction limits* en `factory-sandbox` ("Limit to repository collaborators", 6 meses): **aún no activo** al 26/10.
 4. Runbook de Railway desde la sección 1.
 5. Push de este vault (`factory-11/fase-3`) y PR a `master` (incluye `factory-11/fase-2` y `docs/agents-md`).
+
+## 27/10 21:15 — Railway en marcha
+
+- PRs #5 (`confianza-skills`) y #6 (`fase-3`) de `factory-server` fusionados en `master`. `setpriv` confirmado en la imagen base.
+- Railway: workspace **Factory** (Hobby), proyecto **factory-agenttia**, servicio **postgres** (`pgvector/pgvector:pg18`) en verde. El primer deploy crasheó
+  porque salió antes de cargar variables y volumen; con "Apply changes" quedó bien.
+- **Hobby no permite crear ni programar backups** (es Pro). Decisión: sin backups en la prueba; **cron a R2 antes de la fase 4** (plan 4.1b).
+- **Hueco nuevo:** WorkOS con registro abierto dejaría entrar a cualquiera (y el servidor le crea organización). Se cierra desactivando el registro y creando los usuarios a mano.
+- Rama `factory-11/railway-backups` en `factory-server` (subida, sin PR): runbook con la sección de backups y WorkOS cerrado.
+- **Siguiente:** servicio `factory` (sección 3, sin desplegar) → WorkOS Production (4.1) → GitHub App de producción → Anthropic → desplegar.
 
 ## 26/10 23:55 — fase 3: se prueba Railway antes del Droplet
 
