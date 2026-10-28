@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-27
+actualizado: 2026-10-28
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,26 +12,39 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos (27/10)
+## Dónde estamos (28/10)
 
 **Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
 El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 | Frente | Estado |
 |---|---|
-| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 (servidor) en curso en Railway:** workspace Factory, Postgres arriba; sigue el servicio `factory` y las cuentas externas. Runbook: `factory-server/docs/runbook-railway.md` |
+| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 en Railway: servidor arriba** en `https://factory.alephart.co` (Postgres + `factory`). Bloqueo actual: WorkOS no acepta el usuario creado a mano. Runbook: `factory-server/docs/runbook-railway.md` |
 | **Gate de merge** | `factory-verdict` obligatorio en `factory-sandbox` (público, ruleset sin bypass). Camino feliz probado 2 veces (PRs #15 y #17). Falta *request changes*, 2 rondas y commit tras *approve* |
-| **Skills** | Regla de confianza (solo comentarios de personas con permiso) en `factory-server` rama `factory-11/confianza-skills`, sin PR |
+| **Skills** | Regla de confianza (solo comentarios de personas con permiso) fusionada (PR #5 de `factory-server`) |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
 | **CC** | Piloto en producción. Ítem **D + REQUEST-9** (Railway con *Wait for CI*, Config as Code vence el **2026-12-01**) y después **C (Sentry)**, por el flujo de CC. Congelado 23–28/11 (congreso de EMA). REQUEST-10 (EMA) en curso por el flujo de CC |
 | **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
 **Siguiente (en orden):**
-1. `podman run --rm node:22-bookworm-slim which setpriv` (lo usa `deploy/railway-start.sh`).
-2. Push de `factory-11/fase-3` y `factory-11/confianza-skills` en `factory-server`; PRs y merge (Railway construye desde `master`).
-3. *Interaction limits* en `factory-sandbox` ("Limit to repository collaborators", 6 meses): **aún no activo** al 26/10.
-4. Runbook de Railway desde la sección 1.
-5. Push de este vault (`factory-11/fase-3`) y PR a `master` (incluye `factory-11/fase-2` y `docs/agents-md`).
+1. **Login:** WorkOS no acepta el usuario creado a mano. Revisar: ¿se creó en el entorno *Production* (el de `WORKOS_CLIENT_ID`)? ¿tiene contraseña
+   o el método (*Authentication → Methods*) es solo enlace mágico? ¿correo verificado? Anotar el mensaje exacto que da WorkOS.
+2. *Restart Policy* = **Always** en `factory` (si no se hizo).
+3. Configurar la Factory (sección 3 de `runbook-servidor.md`); `FACTORY_BOT_LOGIN=agenttic-factory[bot]` en `factory-sandbox`; recorrido hasta Done.
+4. Borrar el túnel de Cloudflare cuando el recorrido funcione.
+5. PRs pendientes (los abre Juan Carlos): `factory-server` `factory-11/railway-backups`; `factory-sandbox` `renombrar-job-verdict`; este vault `factory-11/fase-3`.
+6. *Interaction limits* en `factory-sandbox` (verificar); gate: *request changes*, 2 rondas, commit tras *approve*.
+
+## 28/10 00:10 — servidor de la Factory arriba en Railway
+
+- Servicio `factory` desplegado; `https://factory.alephart.co` responde con certificado de Railway (CNAME *DNS only*) y redirige a WorkOS. El túnel sigue (se borra al final).
+- Errores de arranque y su causa (quedan en el runbook): llave de cifrado guardada con el nombre `_KEY_ID`; `ENOTFOUND` (host de `DATABASE_URL`
+  escrito a mano → ahora `${{postgres.RAILWAY_PRIVATE_DOMAIN}}`); `ECONNREFUSED` (Postgres reiniciándose al mismo tiempo); `28P01` (la imagen solo lee
+  `POSTGRES_PASSWORD` en el primer arranque; se alineó con `ALTER USER` desde *railway ssh*, tomando el valor de la variable).
+- **Hueco:** `factory` no espera a Postgres; con la política por defecto queda caída tras ~10 reintentos. Cubierto con *Restart Policy* = Always;
+  antes de la fase 4, que `railway-start.sh` espere al puerto 5432.
+- **Hueco:** sin `WORKOS_*`, la Factory no falla: usa el login de la plataforma de Mastra. Verificado que redirige a WorkOS.
+- `factory-server` rama `factory-11/railway-backups` (subida, sin PR): contraseña en hex, `DATABASE_URL` con referencias, comandos probados, *Restart Policy*, errores de arranque.
 
 ## 27/10 21:15 — Railway en marcha
 
