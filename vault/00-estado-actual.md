@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-23
+actualizado: 2026-10-28
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,24 +12,110 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos
+## Dónde estamos (28/10)
 
-- **Piloto:** Conversion Chat (`master` = producción). **Core futuro:** Agenttia.
-- **Flujo de ramas vigente:** `feature → cc-stage → master`, con `cc-staging` como entorno previo a prod
-  (Supabase `cc-staging`, Railway `cc-agent`, Workers `stg.*`; admin detrás de Cloudflare Access). Documentado en `docs/ENVIRONMENTS.md`.
-- **Caso 1 (precios de IMEC):** **en producción desde el 10/10** (PR #223, merge commit `04dfb95`; release 0.13.0).
-  La tool `get_catalog_price` sigue **apagada** en ORIANA de prod: IMEC probó en staging y aprobó; se habilita con el Go del cliente.
-- **Fábrica:** el caso 1 es el primer ítem que recorre el flujo completo. Retrospectiva medida en
-  [[04-caso-1-retrospectiva]]. Estándares nuevos del 10/10: [[definition-of-done]] v0.2, [[triage]] v0.4,
-  [[runbook-salida-a-prod]], [[comentario-por-fase]]; Fibonacci activa en Plane.
+**Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
+El historial de sesiones está abajo, de la más nueva a la más vieja.
 
-## 21/10 — al retomar (pausa del 13 al 20/10)
+| Frente | Estado |
+|---|---|
+| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 en Railway: servidor arriba** en `https://factory.alephart.co` (Postgres + `factory`). **Fábrica creada en el servidor (28/10)**: `factory-sandbox`, Sonnet 5.5, cuentas personales; primer *Investigate* corrió. Sigue el recorrido hasta Done. Runbook: `factory-server/docs/runbook-railway.md` |
+| **Gate de merge** | `factory-verdict` obligatorio en `factory-sandbox` (público, ruleset sin bypass). Camino feliz probado 2 veces (PRs #15 y #17). Falta *request changes*, 2 rondas y commit tras *approve* |
+| **Skills** | Regla de confianza (solo comentarios de personas con permiso) fusionada (PR #5 de `factory-server`) |
+| **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
+| **CC** | Piloto en producción. Ítem **D + REQUEST-9** (Railway con *Wait for CI*, Config as Code vence el **2026-12-01**) y después **C (Sentry)**, por el flujo de CC. Congelado 23–28/11 (congreso de EMA). REQUEST-10 (EMA) en curso por el flujo de CC |
+| **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
-- **CC:** canal de EMA en producción. Para el Go de IMEC se agregó `request_advisor` (aviso a un asesor sin pausar al agente),
-  con ADR 038 y suite de ORIANA v2 probada con el arnés (PR #239, en `cc-stage`; `cc-stage` va 9 commits adelante de `master`).
-  **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
-- **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
-  en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
+**Siguiente (en orden):**
+1. *Auto-approve tools* encendido (Settings → Behavior; se apaga en cada reinicio del servidor). *Restart Policy* = Always en Railway, si falta.
+2. `FACTORY_BOT_LOGIN=agenttic-factory[bot]` en `factory-sandbox`; desinstalar `agenttic-factory-dev` de ese repo si sigue instalada.
+3. Recorrido completo de un issue de prueba hasta Done; luego gate: *request changes*, 2 rondas, commit tras *approve*.
+4. Borrar el túnel de Cloudflare cuando el recorrido funcione.
+5. WorkOS: revocar la llave sin uso (*Last used: Never*); Branding y nombre del equipo (hoy "Xanxeiman's Team").
+6. PRs pendientes (los abre Juan Carlos): `factory-server` `factory-11/railway-backups`; `factory-sandbox` `renombrar-job-verdict`; este vault `factory-11/fase-3`.
+7. *Interaction limits* en `factory-sandbox` (verificar): es la defensa principal mientras la sandbox sea local con *Auto-approve*.
+
+## 28/10 23:59 — fábrica creada
+
+- *Create factory*: `Alephart-Co/factory-sandbox` (`main`), intake configurado después, cuentas personales, `anthropic/claude-sonnet-5-5`
+  con llave del workspace `factory` de Anthropic (runbook-servidor 1.5).
+- La sesión de usuario arranca bien en Railway: clon y checkout con la App de producción, `exit=0` (la sandbox escribe en `/data/sandboxes`).
+- *Settings → Behavior* bloqueado en la fábrica nueva (404 en `/api/agent-controller/code/sessions/<id-de-la-fábrica>`): lee la sesión
+  propia de la fábrica, que nace con el primer trabajo. Se habilitó tras un *Investigate* desde el intake. Queda en el runbook de Railway.
+
+## 28/10 22:15 — dentro de la Factory
+
+- Bucle de login (`ERR_TOO_MANY_REDIRECTS`): la `WORKOS_API_KEY` en Railway estaba **recortada**. Pista decisiva: *API Keys → Last used: Never*
+  y el usuario sin sesiones, con autenticación y MFA en *succeeded*. Mastra se traga el error del canje en `/auth/callback` y reinicia el login.
+- WorkOS Production quedó con: Email + Password, MFA TOTP obligatorio, registro cerrado, Initiate login URI `/auth/login`.
+- Runbook del servidor (sección 1.3, rama `factory-11/railway-backups`): Redirects, métodos, MFA y el síntoma del bucle.
+
+## 28/10 00:10 — servidor de la Factory arriba en Railway
+
+- Servicio `factory` desplegado; `https://factory.alephart.co` responde con certificado de Railway (CNAME *DNS only*) y redirige a WorkOS. El túnel sigue (se borra al final).
+- Errores de arranque y su causa (quedan en el runbook): llave de cifrado guardada con el nombre `_KEY_ID`; `ENOTFOUND` (host de `DATABASE_URL`
+  escrito a mano → ahora `${{postgres.RAILWAY_PRIVATE_DOMAIN}}`); `ECONNREFUSED` (Postgres reiniciándose al mismo tiempo); `28P01` (la imagen solo lee
+  `POSTGRES_PASSWORD` en el primer arranque; se alineó con `ALTER USER` desde *railway ssh*, tomando el valor de la variable).
+- **Hueco:** `factory` no espera a Postgres; con la política por defecto queda caída tras ~10 reintentos. Cubierto con *Restart Policy* = Always;
+  antes de la fase 4, que `railway-start.sh` espere al puerto 5432.
+- **Hueco:** sin `WORKOS_*`, la Factory no falla: usa el login de la plataforma de Mastra. Verificado que redirige a WorkOS.
+- `factory-server` rama `factory-11/railway-backups` (subida, sin PR): contraseña en hex, `DATABASE_URL` con referencias, comandos probados, *Restart Policy*, errores de arranque.
+
+## 27/10 21:15 — Railway en marcha
+
+- PRs #5 (`confianza-skills`) y #6 (`fase-3`) de `factory-server` fusionados en `master`. `setpriv` confirmado en la imagen base.
+- Railway: workspace **Factory** (Hobby), proyecto **factory-agenttia**, servicio **postgres** (`pgvector/pgvector:pg18`) en verde. El primer deploy crasheó
+  porque salió antes de cargar variables y volumen; con "Apply changes" quedó bien.
+- **Hobby no permite crear ni programar backups** (es Pro). Decisión: sin backups en la prueba; **cron a R2 antes de la fase 4** (plan 4.1b).
+- **Hueco nuevo:** WorkOS con registro abierto dejaría entrar a cualquiera (y el servidor le crea organización). Se cierra desactivando el registro y creando los usuarios a mano.
+- Rama `factory-11/railway-backups` en `factory-server` (subida, sin PR): runbook con la sección de backups y WorkOS cerrado.
+- **Siguiente:** servicio `factory` (sección 3, sin desplegar) → WorkOS Production (4.1) → GitHub App de producción → Anthropic → desplegar.
+
+## 26/10 23:55 — fase 3: se prueba Railway antes del Droplet
+
+- Paso 0 hecho: la imagen se construye en local (podman, arm64): `skills:test`, `board:test` y `build` en verde. Falta probar el **arranque** (varlock, llave PEM).
+- **Revisión de E:** primero Railway, en un workspace propio de la Factory, con nuestro Dockerfile; Droplet como alternativa. Ver [[consolidacion-2026-10-23]].
+- `factory-server` rama `factory-11/fase-3`: `deploy/railway-start.sh` y `docs/runbook-railway.md` (commit `51a54ff`); ruta nueva del túnel en el runbook del Droplet (`c582eaf`). Falta push.
+- Túnel de Cloudflare creado ("Factory Agenttia in alephart.co"): **sobra si Railway funciona** (borrarlo).
+- *Interaction limits*: en `factory-sandbox` todavía no estaba activo al 26/10 (opción "Limit to repository collaborators", 6 meses).
+- **Siguiente:** push y merge de `factory-11/fase-3` y `factory-11/confianza-skills`; runbook de Railway desde la sección 1.
+
+## 26/10 22:30 — bloque 0 en marcha
+
+- **Hecho por Juan Carlos desde el 24/10:** `origen:plane` en `factory-sandbox`; pie de atribución quitado del PR #13; segundo recorrido feliz
+  (issue #16 notación exponencial → PR #17, `factory-verdict` en verde por approve). Aún **sin probar** *request changes* ni commit tras approve.
+- **0.2 hecho (falta push y PR):** `factory-server` rama `factory-11/confianza-skills` (commit `bbbdb0f`): `factory-plan` 0.6, `factory-plan-review` 0.5,
+  `factory-triage` 0.5 verifican el permiso del autor o "Decisores de producto" en `AGENTS.md`. `skills:test` OK.
+- **0.3 hecho (falta PR):** rama `renombrar-job-verdict` en `factory-sandbox` (subida): job → `publicar-estado`; el estado sigue siendo `factory-verdict`.
+- **Pendiente del bloque 0:** *Interaction limits* (0.1, no estaba activo), SANDBOX y `destino:*` en Plane, invitar a Nicole, integrar ramas a `master` (0.6),
+  sección "Decisores de producto" en el `AGENTS.md` de `factory-sandbox` cuando Nicole acepte.
+- **Siguiente:** bloque 1 (fase 3), paso 0 del runbook: construir la imagen en el Mac.
+
+## 24/10 10:00 — gate `factory-verdict` probado (camino feliz)
+
+- Cuentas de GitHub decididas: CC se queda en `alephart` (sin transferir); fábrica y Agenttia en `Alephart-Co`. Team cuando Agenttia reciba PRs de la Factory.
+  **La Factory no entra a CC** hasta tener gate que bloquee (Pro personal) y la App en *Any account*.
+- `factory-sandbox` ahora es **público** (historial y comentarios auditados). Workflow `factory-verdict` (PR #13) + ruleset `main protegido`.
+- Recorrido issue #14 → PR #15: merge **bloqueado** sin review y **habilitado** solo con `Verdict: approve` sobre el último head. Detalle en [[consolidacion-2026-10-23]].
+- **Pendiente de probar del gate:** *request changes* (rojo y escalado a las 2 rondas) y commit nuevo tras *approve* (vuelve a *pending*). Renombrar el job a `publicar-estado`.
+- Nuevo issue en el sandbox: notación exponencial en `formatCOP` (hallazgo del PR #15).
+- **Decisión B tomada (24/10 tarde):** Plane decide el qué y el si; GitHub el cómo. Labels `destino:factory|persona|decision` (Plane) y `origen:plane` (GitHub);
+  skills `plane-to-factory` y `factory-to-plane` en el kit (prioridad baja: primero la línea en la DoD); proyecto SANDBOX en Plane; Nicole colaboradora del repo.
+  Detalle en [[consolidacion-2026-10-23]].
+- **Por hacer de B:** crear SANDBOX en Plane y los labels `destino:*` (por proyecto); `origen:plane` en `factory-sandbox`; invitar a Nicole; línea nueva en la DoD.
+- **Decisión D tomada:** Railway con autodeploy + *Wait for CI*, en un solo ítem de CC junto con REQUEST-9 (vence 2026-12-01). Por el flujo de CC.
+- **DoD v0.3:** línea de "Para registrar en el Intake".
+- **Requisito de seguridad nuevo:** las skills solo cuentan comentarios de autores con permiso (Mastra ya filtra los disparadores; nuestras skills leen todo el hilo).
+  Pendiente: *Interaction limits* en `factory-sandbox` (al 26/10 **no** estaba activo). Nicole se invita por email con rol *Triage*.
+- **Decisión C tomada:** Sentry Developer solo en `apps/agent`, una organización por producto, región US, sin contenido de conversaciones, alertas mínimas;
+  al Intake con la skill `sentry-to-plane` (Gmail + MCP de Sentry, con OK). Ítem de CC después de D/REQUEST-9.
+- **Las cinco decisiones (A–E) quedaron cerradas.** **Plan desde el 24/10:** [[plan-fabrica-2026-10-24]] (bloques 0–5, dependencias, fechas y criterios de salida). Siguiente: bloque 0.
+
+## 23/10 23:05 — consolidación de investigaciones (este chat sigue con la decisión A)
+
+- Nota nueva: [[consolidacion-2026-10-23]]. La arquitectura se mantiene; quedan cinco decisiones (A gate de merge, B Plane ↔ GitHub
+  con ambos workspaces en Free, C Sentry, D Railway fuera del gate, E infraestructura confirmada con E2B como gate duro).
+- **En curso: A.** Check obligatorio `factory-verdict` + que los checks bloqueen (depende del plan de GitHub de cada producto).
 
 ## 23/10 22:55 — FACTORY-11 fase 3: despliegue escrito, falta montar el servidor (chat nuevo)
 
@@ -145,6 +231,14 @@ de `factory-sandbox` hasta Done en el servidor. Requisitos que salieron de la fa
 - **Para retomar:** tarjeta #6 a Canceled; cerrar el issue #6 y borrar la rama `factory/issue-6`; crear el issue nuevo (será el #9);
   recorrerlo esperando entre etapas (en local sin webhooks la sincronización tarda 1–5 min) y hacer el merge solo después del Review.
 - Lección: en local, no tocar GitHub a mano mientras la tarjeta avanza.
+
+## 21/10 — al retomar (pausa del 13 al 20/10)
+
+- **CC:** canal de EMA en producción. Para el Go de IMEC se agregó `request_advisor` (aviso a un asesor sin pausar al agente),
+  con ADR 038 y suite de ORIANA v2 probada con el arnés (PR #239, en `cc-stage`; `cc-stage` va 9 commits adelante de `master`).
+  **Ojo:** el número 038 ya lo tomó `request_advisor`; el ADR de conocimiento pasa a **039** y el ADR 034 sigue diciendo "ver ADR 036".
+- **Fábrica:** FACTORY-1 Done; FACTORY-2 y 3 en Review & QA; FACTORY-10 (Mastra) decidido: nuestras piezas + Mastra como motor y UI,
+  en repo nuevo y servidor propio; local solo para desarrollo (ver [[05-mastra-factory-prueba]]). Sigue FACTORY-11.
 
 ## 11/10 — lo que avanzó (Claude Code, cotejado en GitHub y Plane)
 
@@ -287,19 +381,13 @@ Estimación Fibonacci activa; estados Backlog → Todo → In Progress → Revie
 
 ## Próximos pasos de la fábrica
 
-0. **Separar cuentas de CC y Agenttia** (prerrequisito del principio de entrega): org de Supabase de cc-staging, environment `staging` de Agenttia en el Railway de CC.
-1. **Higiene (una tanda de Claude Code):** subir `cc-stage` a master (ADR 036/037, runbook ejecutado); corregir la línea del ADR 034 a "ver ADR 038";
-   plan v2.2 de PLATFORM-59 al repo; `plan-reviewer-agent` al repo; CODEOWNERS de `apps/agent/scripts/regression/`.
-2. **Decidir la regla de la puerta única** para hallazgos en caliente y borrar REQUEST-19.
-3. **Triage por lotes con Fibonacci:** Request 2, 4–7, 9–18 + los ítems directos del 11/10. Primero lo que tiene fecha o es alto: REQUEST-9 (Railway, 01/12), 10 y 17.
-4. **Caso 2 con los estándares nuevos** (puntos al triar, horas al cerrar, DoD v0.2): es el "después" del artículo.
-5. Horas del caso 1 (tabla A/B/C, pendiente) y habilitar ORIANA con el Go de IMEC.
-6. ADR 038 (conocimiento) · PLATFORM-60 (Agenttia) · artículo, estructura v2.
+Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde estamos" (arriba). La lista del 12/10 queda en el historial de git.
 
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory: FACTORY-11 fase 3 (servidor). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
-el README del vault, vault/03-modelo/factory-server.md y ~/Projects/agenttic/factory-server/docs/runbook-servidor.md
-(rama factory-11/fase-3 o master si ya se fusionó). Conecta las carpetas software-factory y factory-server.
+Retomamos la software factory: FACTORY-11 fase 3 (servidor en Railway). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
+el README del vault, vault/03-modelo/plan-fabrica-2026-10-24.md, vault/03-modelo/consolidacion-2026-10-23.md y
+~/Projects/agenttic/factory-server/docs/runbook-railway.md (rama factory-11/fase-3 o master si ya se fusionó).
+Conecta las carpetas software-factory y factory-server.
 ```
