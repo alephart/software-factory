@@ -19,7 +19,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 | Frente | Estado |
 |---|---|
-| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 en Railway: servidor arriba** en `https://factory.alephart.co` (Postgres + `factory`). **Login con WorkOS funcionando (28/10)**; sigue configurar la Factory. Runbook: `factory-server/docs/runbook-railway.md` |
+| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 en Railway: servidor arriba** en `https://factory.alephart.co` (Postgres + `factory`). **Fábrica creada en el servidor (28/10)**: `factory-sandbox`, Sonnet 5.5, cuentas personales; primer *Investigate* corrió. Sigue el recorrido hasta Done. Runbook: `factory-server/docs/runbook-railway.md` |
 | **Gate de merge** | `factory-verdict` obligatorio en `factory-sandbox` (público, ruleset sin bypass). Camino feliz probado 2 veces (PRs #15 y #17). Falta *request changes*, 2 rondas y commit tras *approve* |
 | **Skills** | Regla de confianza (solo comentarios de personas con permiso) fusionada (PR #5 de `factory-server`) |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
@@ -27,12 +27,21 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
 **Siguiente (en orden):**
-1. WorkOS: revocar la llave que no se usa (*API Keys*: la que siga en *Last used: Never*); Branding y nombre del equipo (hoy "Xanxeiman's Team").
-2. *Restart Policy* = **Always** en `factory` (si no se hizo).
-3. Configurar la Factory (sección 3 de `runbook-servidor.md`); `FACTORY_BOT_LOGIN=agenttic-factory[bot]` en `factory-sandbox`; recorrido hasta Done.
+1. *Auto-approve tools* encendido (Settings → Behavior; se apaga en cada reinicio del servidor). *Restart Policy* = Always en Railway, si falta.
+2. `FACTORY_BOT_LOGIN=agenttic-factory[bot]` en `factory-sandbox`; desinstalar `agenttic-factory-dev` de ese repo si sigue instalada.
+3. Recorrido completo de un issue de prueba hasta Done; luego gate: *request changes*, 2 rondas, commit tras *approve*.
 4. Borrar el túnel de Cloudflare cuando el recorrido funcione.
-5. PRs pendientes (los abre Juan Carlos): `factory-server` `factory-11/railway-backups`; `factory-sandbox` `renombrar-job-verdict`; este vault `factory-11/fase-3`.
-6. *Interaction limits* en `factory-sandbox` (verificar); gate: *request changes*, 2 rondas, commit tras *approve*.
+5. WorkOS: revocar la llave sin uso (*Last used: Never*); Branding y nombre del equipo (hoy "Xanxeiman's Team").
+6. PRs pendientes (los abre Juan Carlos): `factory-server` `factory-11/railway-backups`; `factory-sandbox` `renombrar-job-verdict`; este vault `factory-11/fase-3`.
+7. *Interaction limits* en `factory-sandbox` (verificar): es la defensa principal mientras la sandbox sea local con *Auto-approve*.
+
+## 28/10 23:59 — fábrica creada
+
+- *Create factory*: `Alephart-Co/factory-sandbox` (`main`), intake configurado después, cuentas personales, `anthropic/claude-sonnet-5-5`
+  con llave del workspace `factory` de Anthropic (runbook-servidor 1.5).
+- La sesión de usuario arranca bien en Railway: clon y checkout con la App de producción, `exit=0` (la sandbox escribe en `/data/sandboxes`).
+- *Settings → Behavior* bloqueado en la fábrica nueva (404 en `/api/agent-controller/code/sessions/<id-de-la-fábrica>`): lee la sesión
+  propia de la fábrica, que nace con el primer trabajo. Se habilitó tras un *Investigate* desde el intake. Queda en el runbook de Railway.
 
 ## 28/10 22:15 — dentro de la Factory
 
