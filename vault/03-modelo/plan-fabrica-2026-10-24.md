@@ -35,11 +35,15 @@ Bloque 5 (si el volumen lo pide) ── sin fecha
 | 0.5 | Quitar el pie de atribución de la descripción del PR #13 (desde GitHub; la plataforma lo vuelve a agregar si se edita desde Claude) | Juan Carlos | Sin atribución |
 | 0.6 | Integrar el vault a `master` (`factory-11/fase-2` → `docs/agents-md` → `factory-11/fase-3`) y PR de `factory-11/fase-3` en `factory-server` | Juan Carlos | `master` al día en los dos repos |
 
-## Bloque 1 — Fase 3: servidor (semana del 26/10 – 7/11)
+## Bloque 1 — Fase 3: servidor (semana del 26/10 – 7/11) — **cumplido el 29/10**
 
-Sigue el runbook (`factory-server/docs/runbook-servidor.md`), secciones 0–6: imagen probada en local, Droplet, túnel con nombre,
-WorkOS *Production*, GitHub App de producción, workspace `factory` de Anthropic con límite de gasto, respaldo diario con copia fuera del Droplet
-y prueba de restauración, `unattended-upgrades`.
+Desde el 26/10 se monta en **Railway** (decisión E revisada): runbook `factory-server/docs/runbook-railway.md`, que usa las secciones
+1.3–1.6, 3 y 5 de `runbook-servidor.md` (WorkOS *Production*, GitHub App de producción, workspace `factory` de Anthropic con límite de gasto,
+llave de cifrado, configuración de la Factory y recorrido). El Droplet (`runbook-servidor.md` completo) queda como alternativa.
+Sin backups en Hobby durante la prueba; respaldo a R2 antes de la fase 4 (4.1b).
+
+**Resultado (29/10):** issue #19 de `factory-sandbox` → PR #20 → Done, con tarjeta de Review creada por el webhook, commits de
+`agenttic-factory[bot]` y `factory-verdict` en verde por el bot nuevo. Detalle en [[00-estado-actual]].
 
 **Hueco a cuidar:** al pasar a la App de producción cambia el bot. Hay que actualizar la variable `FACTORY_BOT_LOGIN` de `factory-sandbox`
 a `<slug-de-producción>[bot]`; si no, `factory-verdict` deja en *pending* todos los PRs (no reconoce al bot nuevo) o trata sus PRs como humanos.
@@ -53,7 +57,7 @@ commits con la identidad del bot de producción y `factory-verdict` en verde por
 |---|---|
 | *Request changes* | Check en rojo; el builder corrige; la re-review lo pasa a verde |
 | Dos rondas de cambios | Check en rojo con "escalar a una persona" |
-| Commit nuevo después de un *approve* | El check vuelve a *pending* con el SHA nuevo |
+| Commit nuevo después de un *approve* | El check vuelve a *pending* con el SHA nuevo — **probado el 29/10** (PR #20; la re-review sale sola) |
 
 Si el formato del comentario de *request changes* no coincide con el que espera el workflow, se ajusta la expresión regular y se repite.
 

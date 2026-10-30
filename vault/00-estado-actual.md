@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-28
+actualizado: 2026-10-29
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,28 +12,76 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos (28/10)
+## Dónde estamos (29/10)
 
 **Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
 El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 | Frente | Estado |
 |---|---|
-| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3 en Railway: servidor arriba** en `https://factory.alephart.co` (Postgres + `factory`). **Fábrica creada en el servidor (28/10)**: `factory-sandbox`, Sonnet 5.5, cuentas personales; primer *Investigate* corrió. Sigue el recorrido hasta Done. Runbook: `factory-server/docs/runbook-railway.md` |
-| **Gate de merge** | `factory-verdict` obligatorio en `factory-sandbox` (público, ruleset sin bypass). Camino feliz probado 2 veces (PRs #15 y #17). Falta *request changes*, 2 rondas y commit tras *approve* |
-| **Skills** | Regla de confianza (solo comentarios de personas con permiso) fusionada (PR #5 de `factory-server`) |
+| **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3, bloque 1 cumplido (29/10):** el issue #19 de `factory-sandbox` llegó a Done en `https://factory.alephart.co` (Railway) con el bot de producción `agenttic-factory[bot]`: triage → plan v1 (AJUSTAR) → v2 (APROBAR) → build (PR #20) → review → merge. La tarjeta de Review la crea el webhook. Runbook: `factory-server/docs/runbook-railway.md` |
+| **Gate de merge** | `factory-verdict` **reforzado contra bots** (PR #18 de `factory-sandbox`) y App de producción sin permiso *Workflows*. Probado con el bot de producción: camino feliz y commit tras *approve* (vuelve a *pending*; la re-review sale sola). Falta *request changes* y 2 rondas |
+| **Skills** | Regla de confianza fusionada (PR #5) y vista funcionando en el #19. Cuatro hallazgos del 29/10 por corregir (ver la sesión del 29/10) |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
 | **CC** | Piloto en producción. Ítem **D + REQUEST-9** (Railway con *Wait for CI*, Config as Code vence el **2026-12-01**) y después **C (Sentry)**, por el flujo de CC. Congelado 23–28/11 (congreso de EMA). REQUEST-10 (EMA) en curso por el flujo de CC |
 | **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
 **Siguiente (en orden):**
-1. *Auto-approve tools* encendido (Settings → Behavior; se apaga en cada reinicio del servidor). *Restart Policy* = Always en Railway, si falta.
-2. `FACTORY_BOT_LOGIN=agenttic-factory[bot]` en `factory-sandbox`; desinstalar `agenttic-factory-dev` de ese repo si sigue instalada.
-3. Recorrido completo de un issue de prueba hasta Done; luego gate: *request changes*, 2 rondas, commit tras *approve*.
-4. Borrar el túnel de Cloudflare cuando el recorrido funcione.
-5. WorkOS: revocar la llave sin uso (*Last used: Never*); Branding y nombre del equipo (hoy "Xanxeiman's Team").
-6. PRs pendientes (los abre Juan Carlos): `factory-server` `factory-11/railway-backups`; `factory-sandbox` `renombrar-job-verdict`; este vault `factory-11/fase-3`.
-7. *Interaction limits* en `factory-sandbox` (verificar): es la defensa principal mientras la sandbox sea local con *Auto-approve*.
+1. Rama de skills en `factory-server`: `factory-plan` publica cada versión del plan en un **comentario nuevo** (hoy edita el anterior con `PATCH`);
+   `factory-triage`, `factory-plan` y `factory-plan-review` leen `updated_at` y tratan un comentario editado después de la etapa que lo usó
+   como decisión nueva, con la hora de la edición; `factory-plan-review` lee el hilo con el shell, sin guardarlo en `/tmp` para abrirlo con Read.
+2. Issue nuevo en `factory-sandbox` para *request changes* y 2 rondas (bloque 2); sirve también para probar la rama de skills.
+3. Borrar el túnel de Cloudflare ("Factory Agenttia in alephart.co"): ya no hace falta.
+4. WorkOS: revocar la llave sin uso (*Last used: Never*); Branding y nombre del equipo (hoy "Xanxeiman's Team").
+5. Costo de la primera semana (*Usage* del workspace de Railway) frente a los ~USD 48 del Droplet; costo por ítem en Anthropic (*Usage* por modelo y workspace).
+6. Antes de la fase 4 (sin cambios): que `railway-start.sh` espere al puerto 5432 y el respaldo diario a R2.
+
+**Recordatorios:** *Auto-approve tools* se apaga con cada reinicio o redeploy (revisarlo siempre). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**.
+
+## 29/10 — bloque 1 cumplido: primer recorrido en Railway
+
+**Higiene antes del recorrido**
+- *Interaction limits* activos en `factory-sandbox` ("solo colaboradores", hasta 2027-04-27). `FACTORY_BOT_LOGIN=agenttic-factory[bot]`.
+  *Restart Policy* = Always y límite duro de gasto confirmados en Railway.
+- `agenttic-factory-dev` desinstalada de `Alephart-Co` (no suspendida). Se reinstala al volver a desarrollo en local (por ejemplo, para el artículo).
+- `factory-server`: PR #6 (`fase-3`) y PR #7 (`railway-backups`: runbook de Railway, WorkOS, *Workflows: No access*, `AGENTS.md` con Railway como servidor en uso) fusionados.
+
+**Gate reforzado contra bots** (`factory-sandbox` PR #18, junto con el renombre del job a `publicar-estado`)
+- Hueco que cerró: con `pull_request`, un PR desde una rama del repo corre su propia versión del workflow; el bot podía editar
+  `factory-verdict.yml` y aprobarse. Ahora `pull_request_target` (versión de `main`; seguro porque el job no ejecuta código del PR).
+- Solo un autor de tipo `User` pasa como "PR humano"; cualquier otro bot queda en rojo. Un PR del bot que toque `.github/` queda en rojo.
+- Ya estaba bien: el ruleset solo acepta `factory-verdict` publicado por GitHub Actions (`integration_id` 15368).
+- La App de producción tiene **Workflows: No access** (verificado): sin eso, un PR del bot podría agregar un workflow que publique el estado.
+- El PR que cambia el disparador no puede evaluarse a sí mismo: se disparó una vez con un comentario (`issue_comment` corre con `main`).
+
+**Recorrido del #19** (formatCOP con decimales sin separador de miles)
+- Triage (`agenttic-factory[bot]`): dejó la decisión como pregunta, con propuesta y argumento contrario; no creó etiquetas.
+- Decisiones de Juan Carlos en el issue: redondear a pesos enteros (simétrico, cero sin signo); luego, cambio sobre #16: los valores
+  pequeños dan `$0` y el `TypeError` queda solo desde 1e21; descartado registrar `parseCOP` con decimales sin escala.
+- Plan v1 → revisión con **Opus 5.5**: AJUSTAR con un bloqueante real (`-0.0000005` lanzaba `TypeError`). Plan v2 → APROBAR.
+- Build → PR #20 (46 pruebas; 6 fallan sin el cambio) → review `approve` → `factory-verdict` verde en ~10 s → commit vacío → *pending*
+  con el SHA nuevo → re-review lanzada sola por el push (~2 min) → verde → merge → Done.
+- **`plan:aprobado` la pone `factory-plan-review` al APROBAR (por diseño, guía paso 4); la aprobación humana es pulsar Build.**
+  En el #19 Juan Carlos la quitó y la volvió a poner a mano tras la revisión: sin efecto, la revisión ya había aprobado.
+
+**Hallazgos para las skills** (van a la rama del punto 1 de "Siguiente")
+1. `factory-plan` publica el v2 editando el comentario del v1: la revisión anterior queda citando un texto que ya no se ve en el hilo.
+2. Las skills arman el hilo con `created_at`, sin `updated_at`: un comentario humano editado se atribuye a su hora original (pasó en el #19).
+3. `factory-plan-review` guarda el hilo en `/tmp` con el shell y la herramienta Read no lo encuentra (2 de 2 veces; se recupera sola).
+   Read y el shell de la sandbox no comparten `/tmp`.
+4. "Registrar en el Intake del tracker" es ambiguo en un repo sin proyecto de Plane: hoy es un issue nuevo en el mismo repo.
+- Menores: el triage no ejecutó pruebas y no vio que el #1 ya pedía "sin decimales"; puso como "fuera de alcance" un caso que entraba en el ítem.
+
+**Regla para personas:** cada decisión en un **comentario nuevo**; no editar un comentario que ya leyó una etapa (si hay error, otro comentario que lo corrija).
+
+**Otros**
+- **Crédito de Anthropic agotado** a mitad del recorrido: se acabó el saldo prepagado de febrero (gasto del 29/10 ~USD 0,47). Recarga y
+  recarga automática activadas. Hoy los agentes de CC usan OpenAI; si un producto usa Anthropic, organización propia o límite por workspace
+  para que la Factory no lo deje sin saldo.
+- **Commits *Unverified*:** los commits que Claude hace en la nube con el nombre de Juan Carlos van firmados con la llave de la sesión
+  (`unknown_key`). Para Agenttia y CC: opción A (Claude prepara, Juan Carlos hace el commit firmado desde el Mac). No agregar esa llave a la cuenta.
+- **Atribución en commits del bot:** Mastra agrega `Co-Authored-By: mastra-platform[bot]`. Decidir para Agenttia y CC.
+- Commits del bot sin firma: no importa mientras el ruleset no exija firmas.
 
 ## 28/10 23:59 — fábrica creada
 
