@@ -28,7 +28,11 @@ Volver a [[README]] · Plan: [[plan-fabrica-2026-10-24]] · Estado: [[00-estado-
 - Revisión del plan con Opus: ~USD 1,8 por revisión (25–40% del ítem). En el #19 encontró un bloqueante real.
 - Proyección: 10 ítems/mes ≈ USD 75; 20 ≈ USD 145, más los USD 5 de Railway. **No escala así: hay que bajarlo.**
 
-## Lo que dice el código de Mastra (0.24, revisado el 02/11; 0.26 salió el mismo día)
+## Lo que dice el código de Mastra (0.24, revisado el 02/11)
+
+> Corrección (02/11, noche): `@mastra/factory` 0.25.0 salió el 28/10 y 0.26.0 (la estable) el **30/10**, no el 02/11; el 02/11 salió
+> 0.27.0-alpha.1. Fuente: `npm view @mastra/factory time`. Changelog: `mastracode/factory/CHANGELOG.md` en `mastra-ai/mastra`
+> (la página de releases del repo publica los de `@mastra/core`, no los de la Factory).
 
 - **Modelo por etapa: no se puede configurar.** Hay un modelo por defecto por proyecto, que usan la sesión de la tarjeta (triage, plan, build)
   y la de review. Existe la herramienta `factory_switch_session_model`, pero solo en sesiones de usuario con una persona: una sesión de tarjeta
@@ -81,7 +85,7 @@ PRs de personas. Era un error: `factory-verdict` excluye a propósito los PRs de
 marcadores, herramientas) o su copia en español tiene otra versión. Se retiró el generador de reviews (`build-review-skills`, `reglas-del-repo`).
 
 **Dónde está:** `factory-server` PR #12 (rama `factory-12/skills-cortas`), sin fusionar ni desplegar. Las reviews siguen en 1.0
-(nunca se desplegaron). Mastra 0.26 (paquete `@mastra/factory`, salió el 02/11) sigue sin revisar: procedimiento de
+(nunca se desplegaron). Mastra 0.26 (paquete `@mastra/factory`, salió el 30/10) sigue sin revisar: procedimiento de
 `docs/factory-skills-upstream.md`.
 
 ### El proceso no cambia (comparado el 02/11 contra `docs/factory-skills.md`, `factory-verdict` y el código de Mastra 0.24)

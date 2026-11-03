@@ -55,6 +55,12 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
   checkout desde los argumentos, head anterior de la tarjeta en la re-review, la línea "el merge es humano" y el bloque `Factory Session`.
 - Índice de categorías: condicional (Mastra lo hace obligatorio); se puede volver obligatorio. Documentado.
 - **Autodeploy de Railway: apagado** (quedó así en FACTORY-11; confirmado por Juan Carlos el 02/11). El merge no despliega solo.
+- **Mastra 0.25–0.26 (adelanto del changelog, `mastracode/factory/CHANGELOG.md`; 0.26.0 salió el 30/10):** en 0.26, planificar y construir
+  corren en una sola sesión `work`: revisar si rompe la guardia `role="plan"` de `factory-plan` y `factory-plan-review` **antes de actualizar**.
+  Las skills pueden vivir en `src/mastra/factory-skills/` (gana sobre `public/`; `skills:test` lo detecta). Para decidir: reglas de límite
+  entre repositorios en las skills (0.25, candidata); la review de Mastra edita su veredicto anterior (0.25; choca con `factory-verdict`, que
+  ignora comentarios editados); triage con tabla y etiquetas `severity:*` (0.25; nuestro triage no pone etiquetas). En 0.27-alfa los admins
+  podrán editar skills desde la UI: taparía las del repo sin aviso.
 - Falta: fusionar el PR #12, desplegar con *Deploy Latest Commit* y el plan de pruebas.
 
 ## 02/11 — bloque 2 cerrado: request changes en vivo y tope de rondas con persona
