@@ -146,7 +146,7 @@ Desplegado `master` con el PR #12. Issue de prueba: `parseCOP` no lee el apóstr
 | 22:42:33 | Revisión del plan: APROBAR | ~405 (≤ 500) | 520–700 | ✅ Puso `plan:aprobado`; 5 notas, sin bloqueantes |
 | 22:45:52 | Build → PR #25 | — | — | ✅ Con `docs/tasks/issue-24-plan.md` (Fase 0) |
 | 22:47:02 | Review: approve | 256 (≤ 350) | 390–540 + informe 70–140 | ✅ Comentario con advertencia; un solo comentario (sin informe aparte ni PR de seguimiento); `factory-verdict` verde |
-| 22:50:53 | Commit roto (persona) | — | — | El builder **no lo revirtió**: comentó que era un commit de una persona (el 02/11 tarde sí revirtió uno) |
+| 22:50:53 | Commit roto (persona) | — | — | El builder no lo revirtió: comentó que era un commit de una persona y esperó la review (igual que con el primer commit roto del 02/11; el que revirtió fue el segundo) |
 | 22:51:18 | Re-review: request changes | 238 (≤ 600) | 435–492 | ✅ "Pasada anterior" (invalidado), `[push]`; `factory-verdict` rojo a los 7 s |
 | 22:51:40 | El builder corrige | — | — | ✅ Solo, con comentario de lo atendido |
 | 22:52:05 | Re-review: approve | ~230 | 394–451 | ✅ "atendido" con commit y línea; `factory-verdict` verde, **1 ronda** |
@@ -159,8 +159,6 @@ Merge del #25 con *squash* (como el #22); el #24 se cerró solo. Pasos 1–5 del
   escenarios más compactos, con más ítems medidos.
 - En el PR #26 la Verificación dijo "`npm test` → pasa (ver salida local)" sin el conteo de pruebas.
 - No se pudo comprobar si las reviews leyeron el índice de categorías (no queda en el veredicto).
-- Claude in Chrome no pudo leer ninguna página ("Host access is restricted by policy", también en `example.com`) aunque la extensión tiene
-  acceso a todos los sitios: es una política de Chrome o de la organización. Pendiente de revisar.
 
 **Costo (paso 6): pendiente.** El recorrido cayó entre 03:28 y 04:00 UTC del **03/11**: la consola agrupa por día UTC y los datos llegan con
 retraso. Leerlo el 03/11, aislando el recorrido (por la key o workspace de la Factory, o por hora), con costo por modelo y, si se puede, tokens

@@ -40,7 +40,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
    está en `factory-server` PR #10 (fusionar después del #9 y verificar en el log del deploy: `[wait-for-postgres] … listo`).
 6. Pendientes de B (sin cambios): proyecto SANDBOX en Plane, labels `destino:*`, invitar a Nicole (*Triage*).
 
-**Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder puede revertirlos (el 02/11 tarde revirtió uno; el 02/11 noche no lo hizo: comentó y esperó la review).
+**Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
 
 ## 02/11 (22:30–23:00) — recorrido de prueba de la 1A en `factory-sandbox`
 
@@ -49,7 +49,6 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
   PR #26 de una persona: review de GitHub y "PR humano: no aplica". El proceso se comportó igual que antes con nuestras skills.
 - Salidas dentro del presupuesto salvo el plan (1.009 / 900). Tabla, hallazgos y lo pendiente en [[costo-por-item-2026-11-02]].
 - Costo pendiente: leerlo el 03/11 (día UTC), aislando el tramo 03:28–04:00 UTC.
-- Claude in Chrome bloqueado por política ("Host access is restricted by policy" en todos los sitios): revisar `chrome://policy` o la configuración de la organización.
 
 ## 02/11 (noche) — FACTORY-12, prioridad 1A
 
