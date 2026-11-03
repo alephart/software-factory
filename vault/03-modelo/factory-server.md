@@ -61,6 +61,7 @@ Viven en `factory-server/src/mastra/public/factory-skills/`; el detalle está en
 | `factory-plan` v0.1 | Reemplazo completo + `references/plantilla-plan.md` | Plantilla de plan; Fase 0 versiona el plan en `docs/tasks/`; publica el plan en el issue |
 | `factory-plan-review` v0.1 | Skill nueva | `plan-reviewer-agent` v0.3; sesión nueva, solo lee, veredicto en el issue |
 | `factory-review` / `factory-rereview` | **Generadas** (`npm run skills:build`) | La de Mastra + `skills-src/reglas-del-repo.md` antes del veredicto (`reviewer-agent` v0.3) |
+| `factory-review` / `factory-rereview` 1.0 (02/11) | **Reemplazo propio**, en inglés (FACTORY-12) | Sustituye a la fila anterior: reviews cortas con las reglas de `reglas-del-repo` integradas; mismo proceso (tabla de paridad y plan de pruebas en [[costo-por-item-2026-11-02]]) |
 
 **Hallazgos del código de Mastra (`@mastra/factory@0.24.0`):**
 - El override es **por archivo**, no por carpeta: una skill local reemplaza `SKILL.md` y las `references/` empaquetadas siguen visibles.
