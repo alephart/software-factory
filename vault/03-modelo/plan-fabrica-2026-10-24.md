@@ -51,12 +51,12 @@ a `<slug-de-producción>[bot]`; si no, `factory-verdict` deja en *pending* todos
 **Hecho cuando:** un issue de `factory-sandbox` llega a Done en `factory.alephart.co`, con la tarjeta de Review creada sola (webhook),
 commits con la identidad del bot de producción y `factory-verdict` en verde por el bot nuevo.
 
-## Bloque 2 — Gate completo (durante los recorridos del bloque 1)
+## Bloque 2 — Gate completo (durante los recorridos del bloque 1) — **cerrado el 02/11**
 
 | Caso | Hecho cuando |
 |---|---|
-| *Request changes* | Check en rojo; el builder corrige; la re-review lo pasa a verde |
-| Dos rondas de cambios | Check en rojo con "escalar a una persona" |
+| *Request changes* | Check en rojo; el builder corrige; la re-review lo pasa a verde — **probado el 02/11** (PR #22) |
+| Dos rondas de cambios | Check en rojo con "escalar a una persona"; desde el 02/11 el *approve* posterior exige además la aprobación de una persona (PR #23) — **probado con pruebas en el repo**; en vivo no se puede provocar (el builder corrige antes que la review) |
 | Commit nuevo después de un *approve* | El check vuelve a *pending* con el SHA nuevo — **probado el 29/10** (PR #20; la re-review sale sola) |
 
 Si el formato del comentario de *request changes* no coincide con el que espera el workflow, se ajusta la expresión regular y se repite.
