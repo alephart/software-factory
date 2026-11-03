@@ -29,8 +29,8 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 **Siguiente (en orden):**
 0. **FACTORY-12 — bajar el costo por ítem (~USD 6–7 hoy).** **1A hecho (02/11, noche)** en `factory-server` (PR de la rama `factory-12/skills-cortas`):
    reviews propias y cortas, las cinco skills en inglés (copia en español en `docs/skills-es/`), presupuesto de largo en cada salida.
-   Siguiente: revisar y fusionar el PR #12, desplegar y recorrer el **plan de pruebas** de [[costo-por-item-2026-11-02]] (incluye un *request changes*,
-   un PR de una persona y la medición). Revisar Mastra 0.26. Después: modelo
+   **Desplegado y probado (02/11, 22:30–23:00, issue #24): pasos 1–5 del plan de pruebas cumplidos.** Falta el **costo** (consola de Anthropic,
+   día 03/11 UTC). Revisar Mastra 0.26. Después: modelo
    por etapa (2), carril express (3), memoria observacional (4). Detalle en [[costo-por-item-2026-11-02]].
 1. `factory-server` PR #11 (arranque como `node` con `/data` recursivo; runbook con el comando de arranque obligatorio): fusionar y desplegar con `Cmd + K` → *Deploy Latest Commit*.
 2. ~~Borrar el túnel de Cloudflare~~ **hecho (02/11)**. ~~Llave sin uso de WorkOS~~ **expirada (02/11**; WorkOS no deja borrarla, solo soporte).
@@ -40,7 +40,16 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
    está en `factory-server` PR #10 (fusionar después del #9 y verificar en el log del deploy: `[wait-for-postgres] … listo`).
 6. Pendientes de B (sin cambios): proyecto SANDBOX en Plane, labels `destino:*`, invitar a Nicole (*Triage*).
 
-**Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte.
+**Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder puede revertirlos (el 02/11 tarde revirtió uno; el 02/11 noche no lo hizo: comentó y esperó la review).
+
+## 02/11 (22:30–23:00) — recorrido de prueba de la 1A en `factory-sandbox`
+
+- Issue #24 (`parseCOP` con apóstrofo de millones) → triage → respuesta humana → plan v1 → revisión del plan con Opus 5.5 (APROBAR) → build
+  (PR #25) → review approve → commit roto → re-review *request changes* → el builder corrige → re-review approve (1 ronda) → merge con *squash*.
+  PR #26 de una persona: review de GitHub y "PR humano: no aplica". El proceso se comportó igual que antes con nuestras skills.
+- Salidas dentro del presupuesto salvo el plan (1.009 / 900). Tabla, hallazgos y lo pendiente en [[costo-por-item-2026-11-02]].
+- Costo pendiente: leerlo el 03/11 (día UTC), aislando el tramo 03:28–04:00 UTC.
+- Claude in Chrome bloqueado por política ("Host access is restricted by policy" en todos los sitios): revisar `chrome://policy` o la configuración de la organización.
 
 ## 02/11 (noche) — FACTORY-12, prioridad 1A
 

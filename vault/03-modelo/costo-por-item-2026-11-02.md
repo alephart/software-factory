@@ -132,3 +132,37 @@ Las skills nuevas se dan por buenas solo con este recorrido en `factory-sandbox`
    salida frente a su presupuesto. Si algo se queda corto, se ajusta el presupuesto con esos datos.
 
 Resultado de cada punto: anotarlo aquí y en [[00-estado-actual]].
+
+### Resultado del recorrido (02/11, 22:30–23:00 Bogotá; issue #24, PRs #25 y #26)
+
+Desplegado `master` con el PR #12. Issue de prueba: `parseCOP` no lee el apóstrofo de millones (`$1'200.000`). Revisión del plan con
+**Opus 5.5** (confirmado por Juan Carlos); el resto con el modelo por defecto (la review reporta `claude-sonnet-5-5`, reasoning medium).
+
+| Hora | Etapa | Largo (presupuesto) | Antes (#19, #21) | Resultado |
+|---|---|---|---|---|
+| 22:30:43 | Triage | 332 palabras (≤ 400) | 480–570 | ✅ En español, sin etiquetas, la tarjeta no se movió, 3 preguntas con propuesta |
+| 22:34:57 | Triage actualizado por la respuesta humana | 317 | — | ✅ Esperado: el comentario despierta la sesión de la tarjeta (una corrida extra) |
+| 22:37:49 | Plan v1 | **1.009 (≤ 900)** | 1.290–1.550 | ⚠️ Se pasó ~12%; aplicó y citó las 3 respuestas; no se repitió en la conversación (confirmado en la UI) |
+| 22:42:33 | Revisión del plan: APROBAR | ~405 (≤ 500) | 520–700 | ✅ Puso `plan:aprobado`; 5 notas, sin bloqueantes |
+| 22:45:52 | Build → PR #25 | — | — | ✅ Con `docs/tasks/issue-24-plan.md` (Fase 0) |
+| 22:47:02 | Review: approve | 256 (≤ 350) | 390–540 + informe 70–140 | ✅ Comentario con advertencia; un solo comentario (sin informe aparte ni PR de seguimiento); `factory-verdict` verde |
+| 22:50:53 | Commit roto (persona) | — | — | El builder **no lo revirtió**: comentó que era un commit de una persona (el 02/11 tarde sí revirtió uno) |
+| 22:51:18 | Re-review: request changes | 238 (≤ 600) | 435–492 | ✅ "Pasada anterior" (invalidado), `[push]`; `factory-verdict` rojo a los 7 s |
+| 22:51:40 | El builder corrige | — | — | ✅ Solo, con comentario de lo atendido |
+| 22:52:05 | Re-review: approve | ~230 | 394–451 | ✅ "atendido" con commit y línea; `factory-verdict` verde, **1 ronda** |
+| 23:00:05 | Review del PR #26 (persona) | ~210 | — | ✅ **Review de GitHub** (APPROVED), sin advertencia; `factory-verdict` "PR humano: no aplica" |
+
+Merge del #25 con *squash* (como el #22); el #24 se cerró solo. Pasos 1–5 del plan de pruebas: **cumplidos**.
+
+**Hallazgos para ajustar (sin decidir):**
+- El plan de 3 puntos se pasó del presupuesto (1.009 / 900): la tabla de 9 escenarios y la de decisiones pesan. Ajustar el presupuesto o pedir
+  escenarios más compactos, con más ítems medidos.
+- En el PR #26 la Verificación dijo "`npm test` → pasa (ver salida local)" sin el conteo de pruebas.
+- No se pudo comprobar si las reviews leyeron el índice de categorías (no queda en el veredicto).
+- Claude in Chrome no pudo leer ninguna página ("Host access is restricted by policy", también en `example.com`) aunque la extensión tiene
+  acceso a todos los sitios: es una política de Chrome o de la organización. Pendiente de revisar.
+
+**Costo (paso 6): pendiente.** El recorrido cayó entre 03:28 y 04:00 UTC del **03/11**: la consola agrupa por día UTC y los datos llegan con
+retraso. Leerlo el 03/11, aislando el recorrido (por la key o workspace de la Factory, o por hora), con costo por modelo y, si se puede, tokens
+de entrada, salida y caché. Comparar con el 29/10 (USD 8,85) y el 02/11 (USD 6,81), sabiendo que no es el mismo ítem: aquí hubo una sola
+versión del plan, una ronda de cambios, una corrida extra de triage y una review más (el PR #26).
