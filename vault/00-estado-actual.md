@@ -27,8 +27,11 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
 **Siguiente (en orden):**
-0. **FACTORY-12 — bajar el costo por ítem (~USD 6–7 hoy): prioridad 1A.** Plan y hallazgos del código de Mastra en [[costo-por-item-2026-11-02]]:
-   skills más chicas y respuestas más cortas (1A), modelo por etapa (2), carril express sin revisión del plan (3), memoria observacional (4).
+0. **FACTORY-12 — bajar el costo por ítem (~USD 6–7 hoy).** **1A hecho (02/11, noche)** en `factory-server` (PR de la rama `factory-12/skills-cortas`):
+   reviews propias y cortas, las cinco skills en inglés (copia en español en `docs/skills-es/`), presupuesto de largo en cada salida.
+   Siguiente: revisar y fusionar el PR #12, desplegar y recorrer el **plan de pruebas** de [[costo-por-item-2026-11-02]] (incluye un *request changes*,
+   un PR de una persona y la medición). Revisar Mastra 0.26. Después: modelo
+   por etapa (2), carril express (3), memoria observacional (4). Detalle en [[costo-por-item-2026-11-02]].
 1. `factory-server` PR #11 (arranque como `node` con `/data` recursivo; runbook con el comando de arranque obligatorio): fusionar y desplegar con `Cmd + K` → *Deploy Latest Commit*.
 2. ~~Borrar el túnel de Cloudflare~~ **hecho (02/11)**. ~~Llave sin uso de WorkOS~~ **expirada (02/11**; WorkOS no deja borrarla, solo soporte).
 3. WorkOS: Branding y nombre del equipo (hoy "Xanxeiman's Team").
@@ -39,6 +42,21 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte.
 
+## 02/11 (noche) — FACTORY-12, prioridad 1A
+
+- Analizadas `factory-review` y `factory-rereview` de Mastra 0.24 contra su código: el servidor solo exige la primera línea `Verdict:`,
+  `Reviewed head:` (lo lee `factory-verdict`), `factory_review_source` y `factory_record_review_verdict`. Todo lo demás es instrucción.
+- Decidido con Juan Carlos punto por punto (detalle en [[costo-por-item-2026-11-02]]): reviews propias y cortas (1.0, con `references/publish.md`
+  al final); triage, plan y plan-review **sin recortar**, solo con presupuesto de largo; **las cinco en inglés** con copia en español en
+  `docs/skills-es/`; publicación como Mastra; sin informe de pruebas aparte ni PRs de seguimiento; presupuestos holgados.
+- **Corrección:** un primer borrador (misma noche) daba como "hueco" que los PRs de personas quedaban en *pending*. No lo es:
+  `factory-verdict` los excluye a propósito (24/10, PR #13).
+- Paridad con el proceso comprobada paso a paso (tabla en [[costo-por-item-2026-11-02]]). Al revisarla se agregaron: referencia del PR y
+  checkout desde los argumentos, head anterior de la tarjeta en la re-review, la línea "el merge es humano" y el bloque `Factory Session`.
+- Índice de categorías: condicional (Mastra lo hace obligatorio); se puede volver obligatorio. Documentado.
+- **Autodeploy de Railway: apagado** (quedó así en FACTORY-11; confirmado por Juan Carlos el 02/11). El merge no despliega solo.
+- Falta: fusionar el PR #12, desplegar con *Deploy Latest Commit* y el plan de pruebas.
+
 ## 02/11 — bloque 2 cerrado: request changes en vivo y tope de rondas con persona
 
 - **Costos medidos (cierre de la fase 3):** Railway USD 5/mes fijos (se queda: decisión E confirmada); Anthropic ~USD 6–7 por ítem en el camino feliz,
@@ -48,7 +66,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
   no estaba puesto y, con `RAILWAY_RUN_UID=0`, el servidor y los agentes de la sandbox corrieron como **root** (también en los recorridos del #19 y el #21).
   Se vio porque el log no mostraba `[wait-for-postgres]` tras desplegar el PR #10. Corregido: comando de arranque puesto, procesos como `node`
   (verificado por `/proc`), `chown -R node:node /data` desde SSH (`find /data ! -user node` → 0). `factory-server` PR #11: `chown -R` en cada arranque y
-  verificación en el runbook. *Deploy Latest Commit* está en `Cmd + K`; confirmar que el autodeploy quedó apagado (*Settings → Source*).
+  verificación en el runbook. *Deploy Latest Commit* está en `Cmd + K`; confirmar que el autodeploy quedó apagado (*Settings → Source*). **Hecho: apagado** (FACTORY-11; confirmado el 02/11).
 
 - **Skills del 30/10** (`factory-server` PR #8) fusionadas; el merge **desplegó solo** porque el autodeploy de Railway estaba encendido (ver Siguiente 1).
   *Auto-approve tools* siguió activo tras ese deploy.
