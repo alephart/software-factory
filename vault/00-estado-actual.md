@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-10-29
+actualizado: 2026-11-02
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,7 +12,7 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos (29/10)
+## Dónde estamos (02/11)
 
 **Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
 El historial de sesiones está abajo, de la más nueva a la más vieja.
@@ -20,23 +20,51 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | Frente | Estado |
 |---|---|
 | **Fábrica (FACTORY-11)** | Fases 1 y 2 cerradas. **Fase 3, bloque 1 cumplido (29/10):** el issue #19 de `factory-sandbox` llegó a Done en `https://factory.alephart.co` (Railway) con el bot de producción `agenttic-factory[bot]`: triage → plan v1 (AJUSTAR) → v2 (APROBAR) → build (PR #20) → review → merge. La tarjeta de Review la crea el webhook. Runbook: `factory-server/docs/runbook-railway.md` |
-| **Gate de merge** | `factory-verdict` **reforzado contra bots** (PR #18 de `factory-sandbox`) y App de producción sin permiso *Workflows*. Probado con el bot de producción: camino feliz y commit tras *approve* (vuelve a *pending*; la re-review sale sola). Falta *request changes* y 2 rondas |
-| **Skills** | Regla de confianza fusionada (PR #5) y vista funcionando en el #19. Cuatro hallazgos del 29/10 por corregir (ver la sesión del 29/10) |
+| **Gate de merge** | **Bloque 2 cerrado (02/11).** `factory-verdict` reforzado contra bots (PR #18) y con **tope de rondas como gate** (PR #23): desde 2 rondas, el *approve* de la Factory necesita además una review *Approve* de una persona con escritura sobre el mismo head. Probado en vivo con el bot de producción: camino feliz, commit tras *approve* y *request changes* → rojo → corrección → verde (PR #22). Las 2 rondas y la aprobación humana, con 12 pruebas en el repo (`test/factory-verdict.test.js`); en vivo, pendientes de que ocurran |
+| **Skills** | Regla de confianza (PR #5) y skills del 30/10 (PR #8 de `factory-server`: planes en comentarios nuevos, comentarios editados, hilo sin `/tmp`, Intake definido) **probadas en el #21** |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
 | **CC** | Piloto en producción. Ítem **D + REQUEST-9** (Railway con *Wait for CI*, Config as Code vence el **2026-12-01**) y después **C (Sentry)**, por el flujo de CC. Congelado 23–28/11 (congreso de EMA). REQUEST-10 (EMA) en curso por el flujo de CC |
 | **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
 **Siguiente (en orden):**
-1. Rama de skills en `factory-server`: `factory-plan` publica cada versión del plan en un **comentario nuevo** (hoy edita el anterior con `PATCH`);
-   `factory-triage`, `factory-plan` y `factory-plan-review` leen `updated_at` y tratan un comentario editado después de la etapa que lo usó
-   como decisión nueva, con la hora de la edición; `factory-plan-review` lee el hilo con el shell, sin guardarlo en `/tmp` para abrirlo con Read.
-2. Issue nuevo en `factory-sandbox` para *request changes* y 2 rondas (bloque 2); sirve también para probar la rama de skills.
-3. Borrar el túnel de Cloudflare ("Factory Agenttia in alephart.co"): ya no hace falta.
-4. WorkOS: revocar la llave sin uso (*Last used: Never*); Branding y nombre del equipo (hoy "Xanxeiman's Team").
-5. Costo de la primera semana (*Usage* del workspace de Railway) frente a los ~USD 48 del Droplet; costo por ítem en Anthropic (*Usage* por modelo y workspace).
-6. Antes de la fase 4 (sin cambios): que `railway-start.sh` espere al puerto 5432 y el respaldo diario a R2.
+0. **FACTORY-12 — bajar el costo por ítem (~USD 6–7 hoy): prioridad 1A.** Plan y hallazgos del código de Mastra en [[costo-por-item-2026-11-02]]:
+   skills más chicas y respuestas más cortas (1A), modelo por etapa (2), carril express sin revisión del plan (3), memoria observacional (4).
+1. `factory-server` PR #11 (arranque como `node` con `/data` recursivo; runbook con el comando de arranque obligatorio): fusionar y desplegar con `Cmd + K` → *Deploy Latest Commit*.
+2. ~~Borrar el túnel de Cloudflare~~ **hecho (02/11)**. ~~Llave sin uso de WorkOS~~ **expirada (02/11**; WorkOS no deja borrarla, solo soporte).
+3. WorkOS: Branding y nombre del equipo (hoy "Xanxeiman's Team").
+4. Costo de la primera semana (*Usage* del workspace de Railway) frente a los ~USD 48 del Droplet; costo por ítem en Anthropic (*Usage* por modelo y workspace).
+5. Cerrar la fase 3 (comentario en FACTORY-11) y preparar la fase 4: respaldo diario a R2 (4.1b) y E2B (4.1). La espera a Postgres en el arranque
+   está en `factory-server` PR #10 (fusionar después del #9 y verificar en el log del deploy: `[wait-for-postgres] … listo`).
+6. Pendientes de B (sin cambios): proyecto SANDBOX en Plane, labels `destino:*`, invitar a Nicole (*Triage*).
 
-**Recordatorios:** *Auto-approve tools* se apaga con cada reinicio o redeploy (revisarlo siempre). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**.
+**Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte.
+
+## 02/11 — bloque 2 cerrado: request changes en vivo y tope de rondas con persona
+
+- **Costos medidos (cierre de la fase 3):** Railway USD 5/mes fijos (se queda: decisión E confirmada); Anthropic ~USD 6–7 por ítem en el camino feliz,
+  con 97,6% de caché. Detalle y plan de reducción en [[costo-por-item-2026-11-02]]. Túnel de Cloudflare borrado; llave sin uso de WorkOS expirada.
+
+- **Hallazgo de seguridad (02/11, tarde):** el servicio `factory` arrancaba **sin** `railway-start.sh` desde el montaje (27–28/10): el *Custom start command*
+  no estaba puesto y, con `RAILWAY_RUN_UID=0`, el servidor y los agentes de la sandbox corrieron como **root** (también en los recorridos del #19 y el #21).
+  Se vio porque el log no mostraba `[wait-for-postgres]` tras desplegar el PR #10. Corregido: comando de arranque puesto, procesos como `node`
+  (verificado por `/proc`), `chown -R node:node /data` desde SSH (`find /data ! -user node` → 0). `factory-server` PR #11: `chown -R` en cada arranque y
+  verificación en el runbook. *Deploy Latest Commit* está en `Cmd + K`; confirmar que el autodeploy quedó apagado (*Settings → Source*).
+
+- **Skills del 30/10** (`factory-server` PR #8) fusionadas; el merge **desplegó solo** porque el autodeploy de Railway estaba encendido (ver Siguiente 1).
+  *Auto-approve tools* siguió activo tras ese deploy.
+- **Issue #21** (`parseCOP` con punto decimal y escala): triage ejecutó código esta vez; decisión de Juan Carlos en comentario nuevo (con escala: punto + 1–2 o
+  4+ dígitos es decimal, 3 dígitos sigue siendo miles; sin escala nada cambia); plan v1 → APROBAR (Opus 5.5) citando la decisión "sin editar" y
+  detectando la edición del triage (las skills nuevas funcionan) → PR #22.
+- **Request changes en vivo (PR #22):** commit roto a propósito → re-review `request changes` → `factory-verdict` rojo en 10 s → el builder corrigió solo
+  → re-review `approve` → verde "1 ronda". El workflow lee bien el formato del bot de producción.
+- **Las 2 rondas no se pueden provocar en vivo:** el builder revirtió el segundo commit roto 4 s después del push, antes de cualquier review.
+  **Hallazgo:** el builder reacciona a cualquier push ajeno en su rama y **revierte commits de personas** sin preguntar (esta vez con razón, citando la decisión del issue).
+- **Decisión de Juan Carlos (opción B, PR #23 de `factory-sandbox`):** desde 2 rondas el *approve* de la Factory no basta; hace falta una review *Approve*
+  de una persona con `write`/`admin` sobre el mismo head. Antes el "escalar a una persona" duraba solo hasta el siguiente *approve*. Nuevo disparador
+  `pull_request_review` (corre la versión del PR; aceptable porque la App no tiene *Workflows*). Si no se puede verificar el permiso, queda *pending*.
+- La review de la Factory sobre el PR #23 (humano) pidió cambios con razón: faltaba la prueba (`AGENTS.md`). Se agregó `test/factory-verdict.test.js`
+  (ejecuta el script del workflow con la API simulada; con el workflow anterior fallan las 4 del tope). Después: merge del #23 y *Update branch* (merge, no rebase)
+  del #22 → re-review sola → verde con el workflow nuevo → *squash* a `main`. `main`: 64 pruebas en verde.
 
 ## 29/10 — bloque 1 cumplido: primer recorrido en Railway
 
@@ -434,8 +462,8 @@ Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory: FACTORY-11 fase 3 (servidor en Railway). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md,
-el README del vault, vault/03-modelo/plan-fabrica-2026-10-24.md, vault/03-modelo/consolidacion-2026-10-23.md y
-~/Projects/agenttic/factory-server/docs/runbook-railway.md (rama factory-11/fase-3 o master si ya se fusionó).
-Conecta las carpetas software-factory y factory-server.
+Retomamos la software factory: FACTORY-12 (bajar el costo por ítem), prioridad 1A: analizar las skills de review de Mastra
+(qué ítems y gates cubren, qué instrucciones mejoran la herramienta) y escribir las nuestras cortas, con presupuesto de largo en las salidas.
+Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md, el README del vault, vault/03-modelo/costo-por-item-2026-11-02.md
+y ~/Projects/agenttic/factory-server/AGENTS.md y docs/factory-skills.md. Conecta las carpetas software-factory y factory-server.
 ```
