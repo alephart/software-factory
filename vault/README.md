@@ -28,6 +28,7 @@ No se trata de demostrar que un equipo pequeño iguala a uno grande. Se trata de
   - [[fabrica-y-productos]] — estructura fábrica/productos y principio de entrega sin la fábrica
   - [[consolidacion-2026-10-23]] — investigaciones consolidadas: lecciones de Stripe/Spotify y decisiones A–E
   - [[plan-fabrica-2026-10-24]] — plan desde el 24/10: bloques, dependencias, fechas y criterios de salida
+  - [[costo-por-item-2026-11-02]] — costo medido de la Factory (Railway y modelos) y plan para bajar el costo por ítem
 - **04 — Plantillas**
   - [[intake]] — v0.4, evidencia según tipo
   - [[triage]] — v0.5, con estimación Fibonacci y regla de puerta única
