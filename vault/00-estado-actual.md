@@ -27,10 +27,10 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
 
 **Siguiente (en orden):**
-0. **FACTORY-12 — bajar el costo por ítem (~USD 6–7 hoy).** **1A hecho (02/11, noche)** en `factory-server` (PR de la rama `factory-12/skills-cortas`):
+0. **FACTORY-12 — bajar el costo por ítem (~USD 5 tras la 1A; antes 6–7).** **1A hecho (02/11, noche)** en `factory-server` (PR de la rama `factory-12/skills-cortas`):
    reviews propias y cortas, las cinco skills en inglés (copia en español en `docs/skills-es/`), presupuesto de largo en cada salida.
-   **Desplegado y probado (02/11, 22:30–23:00, issue #24): pasos 1–5 del plan de pruebas cumplidos.** Falta el **costo** (consola de Anthropic,
-   día 03/11 UTC). Revisar Mastra 0.26. Después: modelo
+   **Desplegado y probado (02/11, 22:30–23:00, issue #24): pasos 1–5 del plan de pruebas cumplidos.** **Costo del recorrido: USD 4,86** (−29% frente
+   al 02/11; Opus de la revisión del plan es el 35%). Revisar Mastra 0.26. Después: modelo
    por etapa (2), carril express (3), memoria observacional (4). Detalle en [[costo-por-item-2026-11-02]].
 1. `factory-server` PR #11 (arranque como `node` con `/data` recursivo; runbook con el comando de arranque obligatorio): fusionar y desplegar con `Cmd + K` → *Deploy Latest Commit*.
 2. ~~Borrar el túnel de Cloudflare~~ **hecho (02/11)**. ~~Llave sin uso de WorkOS~~ **expirada (02/11**; WorkOS no deja borrarla, solo soporte).
@@ -44,7 +44,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 ## 06/11 — revisión de etapas, piezas de ECC y diagramas
 
-- **Pruebas de 1A:** pasos 1–5 cumplidos (02/11, issue #24, PRs #25 y #26); falta el **costo** (paso 6). Los commits del vault con el
+- **Pruebas de 1A:** pasos 1–5 cumplidos (02/11, issue #24, PRs #25 y #26); **costo USD 4,86** (paso 6, leído el 06/11). Los commits del vault con el
   resultado estaban en `factory-12/skills-cortas` pero no en `master` (el PR #6 se fusionó antes): van en un PR nuevo de esa rama.
 - **3.1 de CC (Railway + REQUEST-9): sin empezar.** REQUEST-9 sigue en Backlog (sin cambios desde el 08/10); en el repo no hay
   `.railway/railway.ts`, `apps/agent/railway.toml` sigue en uso y el CI solo corre en PRs (*Wait for CI* necesita CI en push a `master` y
@@ -64,7 +64,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
   (PR #25) → review approve → commit roto → re-review *request changes* → el builder corrige → re-review approve (1 ronda) → merge con *squash*.
   PR #26 de una persona: review de GitHub y "PR humano: no aplica". El proceso se comportó igual que antes con nuestras skills.
 - Salidas dentro del presupuesto salvo el plan (1.009 / 900). Tabla, hallazgos y lo pendiente en [[costo-por-item-2026-11-02]].
-- Costo pendiente: leerlo el 03/11 (día UTC), aislando el tramo 03:28–04:00 UTC.
+- Costo (leído el 06/11): **USD 4,86** el 03/11 UTC en el workspace `factory` (Sonnet 3,12 · Opus 1,72 · Haiku 0,02).
 
 ## 02/11 (noche) — FACTORY-12, prioridad 1A
 

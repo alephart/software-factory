@@ -21,6 +21,7 @@ Volver a [[README]] · Plan: [[plan-fabrica-2026-10-24]] · Estado: [[00-estado-
 |---|---|---|---|---|---|
 | 29/10 | #19: triage, plan v1 → AJUSTAR, v2 → APROBAR, build, review, re-review | 5,09 | 3,65 (2 revisiones de plan) | 0,12 | **8,85** |
 | 02/11 | #21 con 3 re-reviews + reviews del PR #23 y del *Update branch* del #22 | 4,71 | 1,86 (1 revisión de plan) | 0,24 | **6,81** |
+| 03/11 | #24 con la 1A: triage + 1 corrida extra, plan v1 → APROBAR, build, review, 1 ronda de cambios, review del PR #26 (solo workspace `factory`) | 3,12 | 1,72 (1 revisión de plan) | 0,02 | **4,86** |
 
 - **~USD 6–7 por ítem en el camino feliz**, aunque el cambio sea de dos líneas: el costo lo pone el número de sesiones (triage, plan, revisión
   del plan, build, review) y el contexto que cada una relee en cada vuelta, no el tamaño del cambio.
@@ -160,7 +161,12 @@ Merge del #25 con *squash* (como el #22); el #24 se cerró solo. Pasos 1–5 del
 - En el PR #26 la Verificación dijo "`npm test` → pasa (ver salida local)" sin el conteo de pruebas.
 - No se pudo comprobar si las reviews leyeron el índice de categorías (no queda en el veredicto).
 
-**Costo (paso 6): pendiente.** El recorrido cayó entre 03:28 y 04:00 UTC del **03/11**: la consola agrupa por día UTC y los datos llegan con
-retraso. Leerlo el 03/11, aislando el recorrido (por la key o workspace de la Factory, o por hora), con costo por modelo y, si se puede, tokens
-de entrada, salida y caché. Comparar con el 29/10 (USD 8,85) y el 02/11 (USD 6,81), sabiendo que no es el mismo ítem: aquí hubo una sola
-versión del plan, una ronda de cambios, una corrida extra de triage y una review más (el PR #26).
+**Costo (paso 6): USD 4,86** (consola, workspace `factory`, 03/11 UTC; leído el 06/11). Sonnet 5.5 USD 3,12, Opus 5.5 USD 1,72 (la
+revisión del plan), Haiku 4.5 USD 0,02. No hubo más actividad de la Factory ese día UTC, así que es el recorrido completo.
+
+- **Frente al 02/11 (USD 6,81): −29%; frente al 29/10 (USD 8,85): −45%.** No es el mismo ítem: el 03/11 tuvo una sola versión del plan,
+  una ronda de cambios, una corrida extra de triage y una review más (PR #26); el 02/11 tuvo 3 re-reviews.
+- **La baja viene de Sonnet** (USD 3,12 frente a 4,71 y 5,09): reviews propias y cortas, skills en inglés y salidas con presupuesto.
+- **Opus casi no cambió** (USD 1,72 frente a 1,86): la revisión del plan no se recortó (decisión del 02/11). Ahora pesa **35% del ítem**:
+  es el blanco natural de la prioridad 2 (modelo por etapa) y del carril express (A), que la salta en ítems de ≤ 2 puntos.
+- Con ~USD 5 por ítem: 10 ítems/mes ≈ USD 50 y 20 ≈ USD 100, más los USD 5 de Railway. Hacen falta más ítems medidos para afirmarlo.
