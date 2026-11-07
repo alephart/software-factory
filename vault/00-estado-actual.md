@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-11-02
+actualizado: 2026-11-06
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -41,6 +41,22 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 6. Pendientes de B (sin cambios): proyecto SANDBOX en Plane, labels `destino:*`, invitar a Nicole (*Triage*).
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
+
+## 06/11 — revisión de etapas, piezas de ECC y diagramas
+
+- **Pruebas de 1A:** pasos 1–5 cumplidos (02/11, issue #24, PRs #25 y #26); falta el **costo** (paso 6). Los commits del vault con el
+  resultado estaban en `factory-12/skills-cortas` pero no en `master` (el PR #6 se fusionó antes): van en un PR nuevo de esa rama.
+- **3.1 de CC (Railway + REQUEST-9): sin empezar.** REQUEST-9 sigue en Backlog (sin cambios desde el 08/10); en el repo no hay
+  `.railway/railway.ts`, `apps/agent/railway.toml` sigue en uso y el CI solo corre en PRs (*Wait for CI* necesita CI en push a `master` y
+  `cc-stage`). La meta de staging del 7/11 queda vencida; la fecha dura es el **2026-12-01** y CC está congelado del 23 al 28/11.
+- **4.1 E2B: sin empezar, código listo.** `factory-server` ya trae `@mastra/e2b` y lo usa con `E2B_API_KEY`. Falta la cuenta, la llave en
+  Railway, un recorrido y verificar que el agente no ve los secretos del servidor y que los commits salen con la identidad del bot.
+  Ojo: en Hobby las sesiones de E2B duran máximo 1 h.
+- **4.1b respaldo: sin empezar** (decisión del 27/10). `deploy/backup.sh` es del Droplet: adaptarlo a un cron en Railway hacia R2 con prueba
+  de restauración, o pasar el workspace a Pro.
+- **Piezas de ECC (`affaan-m/ecc`) y equipo rojo, orden acordado:** E1 escáneres en CI (por el flujo de CC) → A carril express → E2 escenarios
+  de ataque → C listas por stack → B disciplina en el build → E3 agente atacante (después de E2B) → D ciclo de aprendizaje.
+- Diagramas del proceso, el avance, A–D y seguridad: [[diagramas-fabrica]] (Mermaid) y lienzo en Claude Design.
 
 ## 02/11 (22:30–23:00) — recorrido de prueba de la 1A en `factory-sandbox`
 
