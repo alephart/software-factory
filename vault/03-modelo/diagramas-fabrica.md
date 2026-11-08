@@ -1,6 +1,7 @@
 ---
 tags: [modelo, diagramas, factory]
 creado: 2026-11-06
+actualizado: 2026-11-07
 ---
 
 # Diagramas de la fábrica
@@ -9,7 +10,7 @@ Volver a [[README]] · Plan: [[plan-fabrica-2026-10-24]] · Costo: [[costo-por-i
 
 > **Versión visual (la que se usa para explicar):** lienzo de Claude Design «Software Factory · diagramas» —
 > https://claude.ai/artifact/AwAuCkjgLVqRpcatthcU7j (01 Cómo funciona hoy · 02 Avance del plan · 03 A, B, C y D · 04 Seguridad y equipo rojo).
-> Esta nota guarda las mismas ideas en Mermaid para leerlas dentro del vault. Estado según el vault al 02/11 y `factory-server` al 06/11.
+> Esta nota guarda las mismas ideas en Mermaid para leerlas dentro del vault. Estado al 07/11. El lienzo y esta nota no se sincronizan solos: al cambiar uno, actualizar el otro.
 
 ## 01 · Cómo funciona hoy
 
@@ -80,9 +81,9 @@ flowchart TB
 
 ## 02 · Avance del plan hasta la meta
 
-Los bloques 1 y 2 están cerrados. Lo que sigue: bajar el costo por ítem (FACTORY-12), sacar CC a tiempo antes del 1/12 y la fase 4, que termina con el primer ítem de Agenttia hecho por la Factory con aislamiento real.
+Los bloques 1 y 2, las pruebas de 1A y el 3.1 de CC están cerrados. Lo que sigue, en el orden del 07/11: separar CC y Agenttia, montar el repo y los entornos de Agenttia, la fase 4 (E2B) y E1. La meta es el primer ítem de Agenttia hecho por la Factory con aislamiento real.
 
-> El estado de 3.1 de CC y de las pruebas de 1A sale del vault al 02/11. Confírmalo antes de usar este mapa en una reunión.
+> Estado revisado el 07/11 en el repo de CC, Railway y Plane.
 
 ```mermaid
 flowchart TB
@@ -93,9 +94,9 @@ flowchart TB
     B0 --> B1 --> B2
   end
 
-  subgraph COST["FACTORY-12 · bajar el costo por ítem, hoy ~USD 6–7"]
+  subgraph COST["FACTORY-12 · bajar el costo por ítem · USD 4,86 tras la 1A"]
     F1["1A · Reviews propias y cortas,<br/>skills en inglés, presupuesto de largo<br/>PR 12 fusionado"]:::done
-    F1b["Desplegar y recorrer<br/>el plan de pruebas de 1A"]:::active
+    F1b["Pruebas de 1A ✓<br/>issue 24 · USD 4,86 · −29%"]:::done
     F2["2 · Modelo por etapa<br/>contribuir código a Mastra"]:::todo
     F3["3 · Carril express = A"]:::todo
     F4["4 · Memoria observacional"]:::todo
@@ -105,24 +106,29 @@ flowchart TB
 
   subgraph CC["Bloque 3 · CC, por su propio flujo"]
     direction TB
-    C1["3.1 · Railway con Wait for CI + REQUEST-9<br/>staging antes del 7/11 · producción antes del 20/11"]:::active
-    CZ["Congelado 23–28/11<br/>congreso de EMA"]:::hard
-    C9["REQUEST-9 vence el 1/12"]:::hard
-    C2["3.2 · Sentry en apps/agent<br/>antes del 23/11 o en diciembre"]:::todo
-    C1 --> CZ --> C9
-    C1 --> C2
+    C1["3.1 · staging ✓ 07/11<br/>cc-agent ← cc-stage con Wait for CI"]:::done
+    C1P["3.1 · producción ✓ 07/11<br/>agent ← master con Wait for CI"]:::done
+    CZ["Congelado 23–28/11<br/>congreso de EMA · autodeploy apagado"]:::hard
+    C9["1/12 · fin de Config as Code<br/>falta el staging de Agenttia · REQUEST-9"]:::hard
+    C2["3.2 · Sentry en apps/agent<br/>sin fecha"]:::todo
+    E1N["6 · E1 · escáneres<br/>de seguridad en CI"]:::todo
+    C1 --> C1P --> CZ --> C9
+    C1P --> C2
   end
 
-  subgraph F4B["Bloque 4 · Fase 4, primer producto · desde 9/11"]
-    E2B["4.1 · E2B<br/>aislamiento real de la sandbox"]:::todo
+  subgraph F4B["Bloque 4 · Agenttia y fase 4 · orden del 07/11"]
+    SEP["3 · Separar CC y Agenttia<br/>ADR 040 · siguiente, 08/11"]:::active
+    AR["4 · Agenttia: repo en Alephart-Co,<br/>staging y workspace en Railway"]:::todo
+    E2B["5 · E2B · aislamiento real<br/>alternativas de costo por revisar"]:::todo
     BK["4.1b · Respaldo diario<br/>de la base a R2"]:::todo
-    AR["4.2 · Repo de Agenttia<br/>en Alephart-Co"]:::todo
     TM["4.3 · GitHub Team + ruleset<br/>factory-verdict sin bypass"]:::todo
     AP["4.4 · App de la Factory<br/>en el repo de Agenttia"]:::todo
-    AR --> TM --> AP
-    E2B --> AP
+    SEP --> AR --> TM --> AP
+    AR --> E2B --> AP
   end
-  B2 --> E2B
+  C1P --> SEP
+  AR -. "saca el staging de Agenttia<br/>antes del 1/12" .-> C9
+  E2B -. "después" .-> E1N
   B2 --> BK
 
   GOAL(["META · un ítem de Agenttia recorre<br/>Plane → Factory → merge con factory-verdict<br/>obligatorio y aislamiento real"]):::goal
@@ -152,9 +158,13 @@ gantt
     Bloque 2 · gate completo             :done, b2, 2026-10-29, 2026-11-02
     FACTORY-12 1A fusionado              :done, f12, 2026-11-02, 1d
     Bloque 4 · E2B y Agenttia, diciembre sin fecha fija :b4, 2026-11-09, 2026-12-31
+  section Agenttia
+    Separar CC y Agenttia arranca        :milestone, sep, 2026-11-08, 0d
+    Staging de Agenttia fuera de Conversion :crit, agst, 2026-11-08, 2026-12-01
   section CC
-    3.1 Railway en staging               :active, c1s, 2026-10-26, 2026-11-07
-    3.1 Railway en producción            :c1p, 2026-11-07, 2026-11-20
+    3.1 Railway en staging               :done, c1s, 2026-10-26, 2026-11-07
+    3.1 Railway en producción            :done, c1p, 2026-11-07, 1d
+    Autodeploy de producción apagado     :crit, off, 2026-11-22, 2026-11-29
     Congelado por el congreso de EMA     :crit, frz, 2026-11-23, 2026-11-28
     REQUEST-9 vence                      :milestone, crit, r9, 2026-12-01, 0d
     3.2 Sentry si no alcanza antes       :c2, 2026-12-01, 2026-12-31
@@ -278,7 +288,7 @@ flowchart TB
 
 ## 05 · Orden acordado
 
-E1 arranca ya por el flujo de CC, en paralelo. En la fábrica, A llega después de las pruebas de 1A y del modelo por etapa. E2, B y E3 tienen requisitos que hay que cumplir antes.
+Orden de las piezas de ECC y del equipo rojo entre sí. En el orden general del 07/11, E1 va sexto: después de separar CC y Agenttia, montar Agenttia y E2B. En la fábrica, A llega después del modelo por etapa (las pruebas de 1A ya están). E2, B y E3 tienen requisitos que hay que cumplir antes.
 
 ```mermaid
 flowchart TB
@@ -286,7 +296,7 @@ flowchart TB
     O1["1 · E1<br/>escáneres en CI"]:::p1
   end
   subgraph FACT["Por la fábrica"]
-    PRE["FACTORY-12<br/>pruebas de 1A → modelo por etapa"]:::todo
+    PRE["FACTORY-12<br/>pruebas de 1A ✓ → modelo por etapa"]:::todo
     O2["2 · A<br/>carril express"]:::p2
     O3["3 · E2<br/>escenarios de ataque"]:::p2
     O4["4 · C<br/>listas por stack"]:::p3

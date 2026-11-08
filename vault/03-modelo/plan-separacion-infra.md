@@ -9,6 +9,9 @@ estado: por-ejecutar
 
 Volver a [[00-estado-actual]] · Ítem: REQUEST-8 · Decisión de origen: 04/10 (stage = Agenttia v2)
 
+> **07/11:** el bloque 4 (staging de CC) se hizo en PLATFORM-59/62. Lo pendiente (Agenttia fuera del repo y de las cuentas de CC)
+> se retoma en [[separacion-cc-agenttia]].
+
 > **Objetivo:** que cada recurso (repo, rama, Supabase, Railway, Cloudflare, carpeta local)
 > pertenezca a **un solo producto y un solo entorno**, con nombre que lo diga.
 > Al terminar, AGENT-38 tiene dónde probarse antes de producción.
