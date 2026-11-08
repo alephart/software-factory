@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-11-06
+actualizado: 2026-11-07
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,7 +12,7 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos (02/11)
+## Dónde estamos (07/11)
 
 **Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
 El historial de sesiones está abajo, de la más nueva a la más vieja.
@@ -23,24 +23,53 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | **Gate de merge** | **Bloque 2 cerrado (02/11).** `factory-verdict` reforzado contra bots (PR #18) y con **tope de rondas como gate** (PR #23): desde 2 rondas, el *approve* de la Factory necesita además una review *Approve* de una persona con escritura sobre el mismo head. Probado en vivo con el bot de producción: camino feliz, commit tras *approve* y *request changes* → rojo → corrección → verde (PR #22). Las 2 rondas y la aprobación humana, con 12 pruebas en el repo (`test/factory-verdict.test.js`); en vivo, pendientes de que ocurran |
 | **Skills** | Regla de confianza (PR #5) y skills del 30/10 (PR #8 de `factory-server`: planes en comentarios nuevos, comentarios editados, hilo sin `/tmp`, Intake definido) **probadas en el #21** |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
-| **CC** | Piloto en producción. Ítem **D + REQUEST-9** (Railway con *Wait for CI*, Config as Code vence el **2026-12-01**) y después **C (Sentry)**, por el flujo de CC. Congelado 23–28/11 (congreso de EMA). REQUEST-10 (EMA) en curso por el flujo de CC |
-| **Agenttia** | Repo en `Alephart-Co` cuando llegue la fase 4 (E2B → Team → primer ítem por la Factory) |
+| **CC** | Piloto en producción. **3.1 cerrado (07/11):** el runtime despliega por la integración de GitHub con *Wait for CI*: `cc-agent` ← `cc-stage` (PLATFORM-74) y `agent` ← `master` (PLATFORM-75, ADR 039). Producción ya no usa Config as Code. **REQUEST-9 sigue abierto** por el environment `staging` de Agenttia (vence el **2026-12-01**). Congelado 23–28/11 (congreso de EMA): el autodeploy de producción se apaga del 22 al 29/11. REQUEST-10 Done. C (Sentry) sin fecha |
+| **Agenttia** | Siguiente frente (orden del 07/11): separar de CC ([[separacion-cc-agenttia]], punto 3) → repo en `Alephart-Co`, staging y workspace **Agenttia** en Railway (punto 4) → fase 4 de la Factory |
 
-**Siguiente (en orden):**
-0. **FACTORY-12 — bajar el costo por ítem (~USD 5 tras la 1A; antes 6–7).** **1A hecho (02/11, noche)** en `factory-server` (PR de la rama `factory-12/skills-cortas`):
-   reviews propias y cortas, las cinco skills en inglés (copia en español en `docs/skills-es/`), presupuesto de largo en cada salida.
-   **Desplegado y probado (02/11, 22:30–23:00, issue #24): pasos 1–5 del plan de pruebas cumplidos.** **Costo del recorrido: USD 4,86** (−29% frente
-   al 02/11; Opus de la revisión del plan es el 35%). Revisar Mastra 0.26. Después: modelo
-   por etapa (2), carril express (3), memoria observacional (4). Detalle en [[costo-por-item-2026-11-02]].
-1. `factory-server` PR #11 (arranque como `node` con `/data` recursivo; runbook con el comando de arranque obligatorio): fusionar y desplegar con `Cmd + K` → *Deploy Latest Commit*.
-2. ~~Borrar el túnel de Cloudflare~~ **hecho (02/11)**. ~~Llave sin uso de WorkOS~~ **expirada (02/11**; WorkOS no deja borrarla, solo soporte).
-3. WorkOS: Branding y nombre del equipo (hoy "Xanxeiman's Team").
-4. Costo de la primera semana (*Usage* del workspace de Railway) frente a los ~USD 48 del Droplet; costo por ítem en Anthropic (*Usage* por modelo y workspace).
-5. Cerrar la fase 3 (comentario en FACTORY-11) y preparar la fase 4: respaldo diario a R2 (4.1b) y E2B (4.1). La espera a Postgres en el arranque
-   está en `factory-server` PR #10 (fusionar después del #9 y verificar en el log del deploy: `[wait-for-postgres] … listo`).
-6. Pendientes de B (sin cambios): proyecto SANDBOX en Plane, labels `destino:*`, invitar a Nicole (*Triage*).
+**Siguiente — orden del 07/11 (Juan Carlos):**
+1. ~~3.1 de CC en staging~~ **hecho (07/11, PLATFORM-74).**
+2. ~~3.1 de CC en producción~~ **hecho (07/11, PLATFORM-75).** Queda por ver en vivo: el siguiente merge a `master` que toque el
+   runtime debe pasar por *WAITING* y desplegar solo.
+3. **Separar CC y Agenttia — 08/11 temprano, sesión nueva.** Preguntas, insumos y salida esperada (ADR 040 en `conversion-platform`)
+   en [[separacion-cc-agenttia]]. Arranque: "Cómo retomar", al final de este archivo.
+4. **Agenttia: repo, staging y workspace de Railway.** Incluye sacar el environment `staging` (Agenttia) del proyecto Conversion
+   **antes del 2026-12-01**. Si el workspace nuevo no está listo hacia el 25/11, pasarle los settings al dashboard como en
+   producción (~10 min) y cerrar REQUEST-9.
+5. **Fase 4 de la Factory: E2B**, con alternativas de costo por revisar (en Hobby las sesiones duran máximo 1 h; Pro ~USD 150/mes).
+   Junto con 4.1b (respaldo a R2).
+6. **E1 · escáneres de seguridad en CI**, por el flujo de CC.
+
+**Pendientes fuera del orden (siguen en pie):**
+- FACTORY-12: revisar Mastra 0.26; después modelo por etapa (2), carril express (3) y memoria observacional (4). Ver [[costo-por-item-2026-11-02]].
+- `factory-server` PR #11 (arranque como `node`, `/data` recursivo) y PR #10 (espera a Postgres): confirmar que están fusionados y desplegados.
+- WorkOS: branding y nombre del equipo. Costo de la primera semana de Railway frente al Droplet. Cerrar la fase 3 (comentario en FACTORY-11).
+- Pendientes de B: proyecto SANDBOX en Plane, labels `destino:*`, invitar a Nicole (*Triage*).
+- CC: 3.2 Sentry (no entró en el orden del 07/11). GitHub Pro en `alephart` para proteger `master` y `cc-stage`; con eso, el paso 4 de
+  `VERSIONING.md` pasa a PR. Opcional: watch path `!apps/agent/**/*.md` (hoy un cambio solo de `.md` en `apps/agent` despliega sin CI).
+
+**Fechas:** 22/11 apagar el autodeploy de `agent` (producción) en Railway · 23–28/11 congelado por EMA · 29/11 prenderlo ·
+**2026-12-01** Railway deja de leer Config as Code. Los recordatorios del 22 y el 29 están en Google Calendar.
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
+
+## 07/11 — 3.1 de CC cerrado y orden nuevo de trabajo
+
+- **REQUEST-10 (EMA) a Done:** ya estaba resuelto y no bloquea. El congelado del 23–28/11 queda como alerta.
+- **Orden de Juan Carlos:** 3.1 staging → 3.1 producción → separar CC y Agenttia → repo, staging y workspace de Agenttia →
+  fase 4 (E2B, con alternativas de costo) → E1. Ver "Siguiente".
+- **3.1 en staging (PLATFORM-74, PRs #268 y #269 de `conversion-platform`):** CI también en push a `cc-stage` y `master`, con grupo de
+  concurrencia por rama + commit para que el *fast-forward* de `cc-stage` no cancele el CI de `master`. `cc-agent` conectado a
+  `cc-stage` con *Wait for CI*. Probado: verde despliega; rojo queda *SKIPPED* ("CI failed"); el revert queda *SKIPPED* por
+  "No changes to watched files", lo esperado porque el código volvió a ser el que ya corría.
+- **3.1 en producción (PLATFORM-75, PR #270 y release #271 → `5bd6af7`):** el servicio `agent` usaba Config as Code y el dashboard
+  bloqueaba sus settings. Salida: quitar el config path, poner `RAILWAY_DOCKERFILE_PATH=apps/agent/Dockerfile`, desplegar y recién
+  ahí fijar start, healthcheck y reinicio. Se borró `apps/agent/railway.toml`; `audit-railway-vars.mjs` compara ahora `cc-agent`
+  contra producción. ADR 039 en el repo. Primer deploy desde GitHub en verde; el commit se ve en el deployment de Railway.
+  `cc-stage` quedó al día con `master` y no volvió a desplegar (sin cambios de código).
+- **Hallazgos:** (1) el `git add -A` de las instrucciones metió `.vscode/settings.json` en `cc-stage` y `master`; desde entonces,
+  `git apply --index` sin `-A`. (2) Sin protección de ramas se pudo empujar directo a `cc-stage`: hace falta GitHub Pro en `alephart`.
+  (3) El CI corre en el PR y otra vez en el push: *Wait for CI* solo mira los checks del commit empujado.
+- **Vault:** nota nueva [[separacion-cc-agenttia]] para la sesión del 08/11; diagramas al 07/11.
 
 ## 06/11 — revisión de etapas, piezas de ECC y diagramas
 
@@ -510,8 +539,9 @@ Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory: FACTORY-12 (bajar el costo por ítem), prioridad 1A: analizar las skills de review de Mastra
-(qué ítems y gates cubren, qué instrucciones mejoran la herramienta) y escribir las nuestras cortas, con presupuesto de largo en las salidas.
-Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md, el README del vault, vault/03-modelo/costo-por-item-2026-11-02.md
-y ~/Projects/agenttic/factory-server/AGENTS.md y docs/factory-skills.md. Conecta las carpetas software-factory y factory-server.
+Retomamos la software factory, punto 3 del orden del 07/11: separar CC y Agenttia. La salida es un ADR en conversion-platform
+(siguiente número libre: 040) que diga qué es de CC, qué se entrega si termina la alianza y cómo pasa a Agenttia lo que evoluciona en CC.
+Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md y vault/03-modelo/separacion-cc-agenttia.md, después
+vault/03-modelo/fabrica-y-productos.md y vault/03-modelo/plan-separacion-infra.md; en conversion-platform, docs/ENVIRONMENTS.md
+y los ADR 036 y 039. Conecta las carpetas software-factory y conversion-platform. No decidas solo: trae opciones y trade-offs.
 ```

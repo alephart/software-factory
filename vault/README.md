@@ -30,6 +30,7 @@ No se trata de demostrar que un equipo pequeño iguala a uno grande. Se trata de
   - [[plan-fabrica-2026-10-24]] — plan desde el 24/10: bloques, dependencias, fechas y criterios de salida
   - [[costo-por-item-2026-11-02]] — costo medido de la Factory (Railway y modelos) y plan para bajar el costo por ítem
   - [[diagramas-fabrica]] — diagramas del proceso actual, avance del plan, piezas A–D de ECC y seguridad (Mermaid; versión visual en Claude Design)
+  - [[separacion-cc-agenttia]] — punto 3 del 07/11: qué es de CC, qué se entrega y cómo pasa a Agenttia (por decidir)
 - **04 — Plantillas**
   - [[intake]] — v0.4, evidencia según tipo
   - [[triage]] — v0.5, con estimación Fibonacci y regla de puerta única
