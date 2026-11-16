@@ -28,7 +28,7 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 **Siguiente — al 16/11 (orden del 07/11, actualizado):**
 1. ~~3.1 de CC en staging y producción~~ **hecho (07/11).** Queda por ver en vivo el primer merge a `master` que toque el runtime.
-2. **Cerrar el punto 3 (separación):**
+2. **Cerrar el punto 3 (separación)** — decisiones, dominio y merges hechos el 16/11; queda el commit del ADR:
    - Hacer commit de lo preparado el 08/11, que está **sin commit en el checkout de CC, hoy en `master`**: ADR 040 y los docs de
      Supabase (`ENVIRONMENTS.md`, `AGENTS.md`, `README.md`, `.claude/agents/*`, `package.json` con `supabase:link:stg` → cc-staging).
      Crear rama desde `cc-stage` antes del commit.
@@ -58,6 +58,22 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 **2026-12-01** Railway deja de leer Config as Code. Los recordatorios del 22 y el 29 están en Google Calendar.
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
+
+## 16/11 — ADR 040 aceptado y runtime de CC en `agent.conversionchat.co`
+
+- **Decisiones del ADR 040 (Juan Carlos):** Cloudflare: cuenta nueva solo de CC **después del 29/11** (hasta entonces sigue en la
+  cuenta actual, junto a `agenttia.me`). Railway: el proyecto de CC se queda en el workspace actual; Agenttia ya tiene su workspace
+  **Agenttia**. Historial: se aceptan los `refs/pull/*` de `stage` en CC; `Alephart-Co/agenttia-platform` arrancó con un solo commit
+  ("Base de Agenttia", ramas `main` y `stage`). ADR 040 pasa a *Aceptado* (archivo aún sin commit).
+- **Dominio hecho:** `agent.conversionchat.co` en el servicio `agent` de producción (`/health` ok), `AGENT_RUNTIME_URL` en admin y portal
+  (dashboard + `hotfix/runtime-conversionchat`) y webhooks de WasenderAPI movidos. `agent.agenttia.me` queda un tiempo en el servicio
+  mientras se pone en marcha Agenttia.
+- **Hallazgos:** el filtro `@host` de los HTTP logs de Railway no funcionó en el dashboard; la prueba de que nadie usa el dominio viejo
+  es la configuración de cada cliente (WasenderAPI, `imec-scraper`, Workers). La rama `docs/*` choca en CC con una rama remota `docs`:
+  se usa `chore/*`. `agenttia-platform` solo trae `release.yml` (sin `ci.yml`).
+- **Hecho el 16/11:** fusionados `chore/supabase-por-producto` (→ `cc-stage`) y el hotfix (→ `master`, y `master → cc-stage`);
+  `PRICES_INGEST_URL` de producción de `imec-scraper` cambiado. **Queda:** commit del ADR 040 y retirar `agent.agenttia.me` cuando
+  Agenttia no lo necesite (si Agenttia lo reutiliza: quitarlo primero del servicio de CC).
 
 ## 08/11 — punto 3: CC separado de Agenttia (ADR 040) y Supabase por producto
 
