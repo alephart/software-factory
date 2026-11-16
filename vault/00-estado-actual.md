@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-11-07
+actualizado: 2026-11-16
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -12,7 +12,7 @@ Volver a [[README]]
 > **Fuente de verdad del producto:** Plane (comentarios por fase) y el repo (`master`, `docs/tasks/`).
 > Este archivo resume; no duplica.
 
-## Dónde estamos (07/11)
+## Dónde estamos (16/11, al retomar tras 8 días)
 
 **Plan vigente:** [[plan-fabrica-2026-10-24]] · **Decisiones:** [[consolidacion-2026-10-23]] (A–E, cuentas de GitHub, seguridad de las skills).
 El historial de sesiones está abajo, de la más nueva a la más vieja.
@@ -24,20 +24,27 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | **Skills** | Regla de confianza (PR #5) y skills del 30/10 (PR #8 de `factory-server`: planes en comentarios nuevos, comentarios editados, hilo sin `/tmp`, Intake definido) **probadas en el #21** |
 | **Plane ↔ Factory (B)** | Decidido. Hecho: `origen:plane`. Falta: proyecto SANDBOX, labels `destino:*`, invitar a Nicole (*Triage*) |
 | **CC** | Piloto en producción. **3.1 cerrado (07/11):** el runtime despliega por la integración de GitHub con *Wait for CI*: `cc-agent` ← `cc-stage` (PLATFORM-74) y `agent` ← `master` (PLATFORM-75, ADR 039). Producción ya no usa Config as Code. **REQUEST-9 sigue abierto** por el environment `staging` de Agenttia (vence el **2026-12-01**). Congelado 23–28/11 (congreso de EMA): el autodeploy de producción se apaga del 22 al 29/11. REQUEST-10 Done. C (Sentry) sin fecha |
-| **Agenttia** | Siguiente frente (orden del 07/11): separar de CC ([[separacion-cc-agenttia]], punto 3) → repo en `Alephart-Co`, staging y workspace **Agenttia** en Railway (punto 4) → fase 4 de la Factory |
+| **Separación CC / Agenttia** | **Punto 3 en curso.** ADR 040 *Propuesto* (sin commit) con 4 decisiones abiertas. Supabase ya separado por producto (08/11). Repo de Agenttia creado en `Alephart-Co` con la antigua `stage` de CC, rama principal `main` (09/11); su ruleset no se aplica en Free |
 
-**Siguiente — orden del 07/11 (Juan Carlos):**
-1. ~~3.1 de CC en staging~~ **hecho (07/11, PLATFORM-74).**
-2. ~~3.1 de CC en producción~~ **hecho (07/11, PLATFORM-75).** Queda por ver en vivo: el siguiente merge a `master` que toque el
-   runtime debe pasar por *WAITING* y desplegar solo.
-3. **Separar CC y Agenttia — 08/11 temprano, sesión nueva.** Preguntas, insumos y salida esperada (ADR 040 en `conversion-platform`)
-   en [[separacion-cc-agenttia]]. Arranque: "Cómo retomar", al final de este archivo.
-4. **Agenttia: repo, staging y workspace de Railway.** Incluye sacar el environment `staging` (Agenttia) del proyecto Conversion
-   **antes del 2026-12-01**. Si el workspace nuevo no está listo hacia el 25/11, pasarle los settings al dashboard como en
-   producción (~10 min) y cerrar REQUEST-9.
-5. **Fase 4 de la Factory: E2B**, con alternativas de costo por revisar (en Hobby las sesiones duran máximo 1 h; Pro ~USD 150/mes).
-   Junto con 4.1b (respaldo a R2).
-6. **E1 · escáneres de seguridad en CI**, por el flujo de CC.
+**Siguiente — al 16/11 (orden del 07/11, actualizado):**
+1. ~~3.1 de CC en staging y producción~~ **hecho (07/11).** Queda por ver en vivo el primer merge a `master` que toque el runtime.
+2. **Cerrar el punto 3 (separación)** — decisiones, dominio y merges hechos el 16/11; queda el commit del ADR:
+   - Hacer commit de lo preparado el 08/11, que está **sin commit en el checkout de CC, hoy en `master`**: ADR 040 y los docs de
+     Supabase (`ENVIRONMENTS.md`, `AGENTS.md`, `README.md`, `.claude/agents/*`, `package.json` con `supabase:link:stg` → cc-staging).
+     Crear rama desde `cc-stage` antes del commit.
+   - Decidir las 4 abiertas del ADR 040: cuenta de Cloudflare de CC, workspace de Railway de CC, historial del repo (`refs/pull/*`
+     de `stage`) y dominio del runtime de CC (propuesta `agent.conversionchat.co`, después del 29/11). Con eso pasa a *Aceptado*.
+   - Hacer commit del vault (este archivo) y revisar el `.vscode/settings.json` borrado en `software-factory`.
+3. **Punto 4 — Agenttia: staging y workspace de Railway. Fecha dura 2026-12-01** (quedan 15 días, con el congelado del 23–28/11
+   en medio). Sacar el environment `staging` del proyecto de CC; si el workspace **Agenttia** no está listo el **25/11**, pasar sus
+   settings al dashboard (~10 min) y cerrar REQUEST-9. Antes del primer push del repo de Agenttia: revisar los workflows heredados.
+4. **Protección de ramas:** decidir GitHub Team en `Alephart-Co` (Agenttia) y GitHub Pro en `alephart` (CC), o seguir con CI +
+   *Wait for CI* como compensación (ADR 037).
+5. **Fase 4 de la Factory: E2B**, con alternativas de costo (en Hobby las sesiones duran máximo 1 h; Pro ~USD 150/mes). Junto con 4.1b
+   (respaldo a R2).
+6. **E1 · escáneres de seguridad en CI.**
+7. Cuando el ADR 040 quede aceptado: sacar del vault las notas de producto ([[separacion-cc-agenttia]], [[plan-separacion-infra]])
+   y dejar un enlace al ADR (el vault es de la fábrica).
 
 **Pendientes fuera del orden (siguen en pie):**
 - FACTORY-12: revisar Mastra 0.26; después modelo por etapa (2), carril express (3) y memoria observacional (4). Ver [[costo-por-item-2026-11-02]].
@@ -51,6 +58,36 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 **2026-12-01** Railway deja de leer Config as Code. Los recordatorios del 22 y el 29 están en Google Calendar.
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
+
+## 16/11 — ADR 040 aceptado y runtime de CC en `agent.conversionchat.co`
+
+- **Decisiones del ADR 040 (Juan Carlos):** Cloudflare: cuenta nueva solo de CC **después del 29/11** (hasta entonces sigue en la
+  cuenta actual, junto a `agenttia.me`). Railway: el proyecto de CC se queda en el workspace actual; Agenttia ya tiene su workspace
+  **Agenttia**. Historial: se aceptan los `refs/pull/*` de `stage` en CC; `Alephart-Co/agenttia-platform` arrancó con un solo commit
+  ("Base de Agenttia", ramas `main` y `stage`). ADR 040 pasa a *Aceptado* (archivo aún sin commit).
+- **Dominio hecho:** `agent.conversionchat.co` en el servicio `agent` de producción (`/health` ok), `AGENT_RUNTIME_URL` en admin y portal
+  (dashboard + `hotfix/runtime-conversionchat`) y webhooks de WasenderAPI movidos. `agent.agenttia.me` queda un tiempo en el servicio
+  mientras se pone en marcha Agenttia.
+- **Hallazgos:** el filtro `@host` de los HTTP logs de Railway no funcionó en el dashboard; la prueba de que nadie usa el dominio viejo
+  es la configuración de cada cliente (WasenderAPI, `imec-scraper`, Workers). La rama `docs/*` choca en CC con una rama remota `docs`:
+  se usa `chore/*`. `agenttia-platform` solo trae `release.yml` (sin `ci.yml`).
+- **Hecho el 16/11:** fusionados `chore/supabase-por-producto` (→ `cc-stage`) y el hotfix (→ `master`, y `master → cc-stage`);
+  `PRICES_INGEST_URL` de producción de `imec-scraper` cambiado. **Queda:** commit del ADR 040 y retirar `agent.agenttia.me` cuando
+  Agenttia no lo necesite (si Agenttia lo reutiliza: quitarlo primero del servicio de CC).
+
+## 08/11 — punto 3: CC separado de Agenttia (ADR 040) y Supabase por producto
+
+- **Criterio (Juan Carlos):** CC y Agenttia son productos distintos; ambos los construye la SF, que no es parte de ninguno.
+  No hay flujo de código entre los dos. Los ADR tratan solo del trabajo técnico.
+- **ADR 040** en `conversion-platform` (`docs/adr/040-cc-separado-de-agenttia.md`, *Propuesto*, sin commit): CC con cuentas
+  propias por proveedor, sale todo lo de Agenttia (rama `stage`, environment `staging` de Railway, PLATFORM-60), el runtime
+  deja `agent.agenttia.me` (webhooks de WasenderAPI por agente, después del 29/11). Por decidir: Cloudflare, Railway e historial del repo.
+- **Supabase hecho (08/11):** CC: Conversion / `cc-prod` (`ljmtpuoooxucdubjbeox`) y Conversion-stage / `cc-staging`
+  (`tbfaoyoqntumikrulspt`). Agenttia: Agenttia / `agenttia-prod` (pendiente) y Agenttia-stage / `agenttia-staging` (`gbkjpnteijduqsvzsnns`).
+- **09/11:** repo de Agenttia en `Alephart-Co`, clonado en `~/Projects/agenttic/agenttia`, con la antigua `stage` de CC; rama
+  principal `main`. El ruleset de `main` (PR obligatorio, 0 aprobaciones) se guardó pero **no se aplica**: repo privado en Free.
+- Docs de CC al día (sin commit): `ENVIRONMENTS.md`, `AGENTS.md`, `README.md`, `.claude/agents/{database,runtime}-agent.md`.
+  **`pnpm supabase:link:stg` vinculaba el staging de Agenttia**; ahora vincula `cc-staging`.
 
 ## 07/11 — 3.1 de CC cerrado y orden nuevo de trabajo
 
@@ -539,9 +576,7 @@ Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory, punto 3 del orden del 07/11: separar CC y Agenttia. La salida es un ADR en conversion-platform
-(siguiente número libre: 040) que diga qué es de CC, qué se entrega si termina la alianza y cómo pasa a Agenttia lo que evoluciona en CC.
-Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md y vault/03-modelo/separacion-cc-agenttia.md, después
-vault/03-modelo/fabrica-y-productos.md y vault/03-modelo/plan-separacion-infra.md; en conversion-platform, docs/ENVIRONMENTS.md
-y los ADR 036 y 039. Conecta las carpetas software-factory y conversion-platform. No decidas solo: trae opciones y trade-offs.
+Retomamos la software factory. Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md ("Dónde estamos" y "Siguiente").
+Conecta las carpetas software-factory, conversion-platform y agenttia. Seguimos por el punto que te indique; no decidas solo:
+trae opciones y trade-offs.
 ```
