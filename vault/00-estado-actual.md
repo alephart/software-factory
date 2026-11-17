@@ -59,6 +59,30 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
 
+## 16/11 (noche) — Agenttia en pausa; la fábrica pasa a CC
+
+- **Decisión de Juan Carlos:** pausar el staging de Agenttia y concentrarse en llevar la Factory a CC. Cambia el plan del 24/10
+  ("la Factory no entra a CC hasta después del primer ítem de Agenttia"): **CC pasa a ser el primer producto**.
+- **Agenttia queda así:** proyecto Railway `agenttia-runtime`, environment `staging`, servicio `agenttia-platform` conectado a
+  `Alephart-Co/agenttia-platform` rama `stage`, con cambios sin aplicar; buckets R2 `agenttia-prod`, `agenttia-staging`,
+  `agenttia-agent-media` (falta `agenttia-agent-media-staging`, tokens por entorno y copiar objetos desde los buckets de CC).
+- **Riesgo aceptado mientras dure la pausa:** el environment `staging` del proyecto Conversion (Agenttia) lee Config as Code y
+  **deja de desplegar el 2026-12-01**. No afecta a CC. Plan B de ~10 min: pasar sus settings al dashboard; REQUEST-9 sigue abierto.
+
+## 16/11 (noche) — orden confirmado: E2B y respaldo primero
+
+- **Juan Carlos:** primero E2B (4.1) y respaldo (4.1b), que sirven a los dos productos; después se elige producto.
+- **La comparativa de aislamiento ya existe** (chat "Comparativa E2B vs exe.dev", 08–09/11; lámina *05 · Aislamiento* del lienzo en
+  Claude Design). No estaba en el vault. Conclusiones: con los datos de la fase 3 (~USD 7 por ítem en tokens), el sandbox casi no pesa
+  en el costo total (USD 7–15/mes a 90 ítems frente a ~USD 630 en tokens); el ahorro está en los tokens. Pesa más el esfuerzo de
+  integración que el precio por hora. exe.dev es más barato por hora y no deja ver las llaves del modelo a la VM, pero no tiene SDK.
+  También se miraron Cloudflare Sandboxes, AWS AgentCore, Azure, GKE Agent Sandbox y Agent37.
+- **Ojo con E2B:** la llave del modelo entra a la sandbox para que Claude Code funcione → llave de Anthropic aparte, con límite de
+  gasto, solo para los runs.
+- **Siguiente:** confirmar qué proveedores soporta la versión de Mastra Factory desplegada (`FACTORY_SANDBOX_PROVIDER=local` hoy;
+  `factory-server` ya trae `@mastra/e2b`); cuenta de E2B Hobby y recorrido en `factory-sandbox`; medir si la hora por sesión alcanza
+  con el monorepo real.
+
 ## 16/11 — ADR 040 aceptado y runtime de CC en `agent.conversionchat.co`
 
 - **Decisiones del ADR 040 (Juan Carlos):** Cloudflare: cuenta nueva solo de CC **después del 29/11** (hasta entonces sigue en la
@@ -576,7 +600,10 @@ Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory. Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md ("Dónde estamos" y "Siguiente").
-Conecta las carpetas software-factory, conversion-platform y agenttia. Seguimos por el punto que te indique; no decidas solo:
-trae opciones y trade-offs.
+Retomamos la software factory: fase 4, E2B (4.1) y respaldo (4.1b). Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md
+("Dónde estamos", "Siguiente" y las entradas del 16/11) y vault/03-modelo/costo-por-item-2026-11-02.md. Conecta las carpetas
+software-factory y factory-server. Primer paso: revisar en factory-server qué proveedores de sandbox soporta la versión de Mastra
+Factory desplegada y cómo se configura E2B (hoy FACTORY_SANDBOX_PROVIDER=local). Después: cuenta de E2B Hobby, llave de Anthropic
+aparte para los runs, recorrido en factory-sandbox y medir si la hora por sesión alcanza con el monorepo real. En paralelo, 4.1b:
+pg_dump diario a R2 con restauración probada. No decidas solo: trae opciones y trade-offs.
 ```
