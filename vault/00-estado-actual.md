@@ -31,12 +31,22 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 - **Pendiente de cierre del 22/11:** leer costos del 22/11 (Anthropic y E2B, ver entrada de las 11:40); PR #16 desplegado el 22/11
   (esa vez llegó la alerta, como se esperaba): comprobar en el redeploy siguiente que ya no llega; *squash* obligatorio solo en los
   repos de producto (decisión de Juan Carlos, 22/11: en `software-factory` y `factory-sandbox` se decide en cada merge, como hábito); en el próximo ítem, confirmar que el autor del commit ya sale `agenttic-factory[bot]`.
-- **Próxima sesión: subir Mastra de la 0.24 a la 0.29** (ítem propio en FACTORY, rama en `factory-server`). Leer el changelog
-  0.25–0.29 completo, rehacer el tablero y el gate `plan:aprobado`, configurar `coAuthor`, probar en local con la base restaurada
-  desde R2 y recién después desplegar (con respaldo fresco antes). Ver [[fase-4-e2b-y-version-de-mastra-2026-11-16]].
-- **Después:** limpieza periódica de sandboxes pausadas (vía probada: borrar sesiones de tarjetas cerradas desde la Factory; cada
-  ítem deja 2), automatizaciones (*Auto-start runs* para la review; `/plan` para pasar a Planning), medir el monorepo y bajar el
-  plazo de E2B si alcanza. La revisión del plan sigue manual con Opus u otro modelo distinto al del plan.
+- **Próxima sesión: bajar las intervenciones humanas sobre la 0.24, para seguir midiendo** (decisión de Juan Carlos, 22/11).
+  Hoy son 6–7 por ítem: Investigate, responder el triage, mover a Planning, lanzar la revisión del plan, Build, lanzar la Review y merge.
+  - **Automatizables en la 0.24:** *Auto-start runs* (arrancan solos el triage y la review del PR de la Factory) y una regla en
+    `issueCommentCreated` que pasa la tarjeta a Planning cuando la respuesta al triage trae `/plan` (responder = aprobar, en un paso).
+  - **Quedan 4, no 3:** responder con `/plan`, lanzar la revisión del plan, Build y merge. La revisión del plan no se automatiza en
+    Mastra porque debe correr con otro modelo (decisión del 22/11) y la 0.24 no deja elegir modelo por etapa.
+  - **Para llegar a 3, opción a decidir al empezar:** que la revisión del plan corra **fuera de Mastra**, en un GitHub Action que se
+    dispara con el comentario del plan, llama a Opus con la skill `factory-plan-review` y publica el veredicto y `plan:aprobado`.
+    A favor: modelo libre y automática. En contra: llave de Anthropic como secreto en GitHub, la skill en dos lugares y un costo
+    aparte del workspace `factory`.
+  - Cada automatización en una rama, una a la vez, probada con un issue de `factory-sandbox`, midiendo tiempos y costo frente al #27.
+- **Después: subir Mastra de la 0.24 a la 0.29** (ítem propio en FACTORY). Leer el changelog 0.25–0.29, rehacer el tablero y el gate
+  `plan:aprobado`, configurar `coAuthor` y probar en local con la base restaurada desde R2 antes de desplegar. Ver
+  [[fase-4-e2b-y-version-de-mastra-2026-11-16]]. Las automatizaciones de la 0.24 se rehacen sobre el mecanismo nuevo.
+- **También:** limpieza periódica de sandboxes pausadas (vía probada: borrar sesiones de tarjetas cerradas desde la Factory; cada ítem
+  deja 2), medir el monorepo y bajar el plazo de E2B si alcanza.
 
 **Siguiente — al 16/11 (orden del 07/11, histórico):**
 1. ~~3.1 de CC en staging y producción~~ **hecho (07/11).** Queda por ver en vivo el primer merge a `master` que toque el runtime.
@@ -708,11 +718,11 @@ Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory: subir Mastra Factory de la 0.24 a la 0.29 en factory-server. Lee
+Retomamos la software factory: bajar las intervenciones humanas por ítem sobre Mastra Factory 0.24, para seguir midiendo. Lee
 ~/Projects/agenttic/software-factory/vault/00-estado-actual.md ("Siguiente — al 22/11" y las entradas del 21 y 22/11) y
-vault/03-modelo/fase-4-e2b-y-version-de-mastra-2026-11-16.md (sección "Versión de Mastra"). Conecta las carpetas software-factory
-y factory-server. Primero: crear el ítem en Plane (FACTORY) y la rama; leer el changelog de @mastra/factory 0.25.0 a 0.29.0 completo
-(mastracode/factory/CHANGELOG.md en mastra-ai/mastra) y listar qué hay que adaptar de lo nuestro (tablero Work y gate
-plan:aprobado, index.ts, tablero Review, skills, factory-verdict, coAuthor, migraciones). Probar en local con la base restaurada
-desde el respaldo de R2 antes de desplegar. No decidas solo: trae opciones y trade-offs.
+vault/03-modelo/fase-4-e2b-y-version-de-mastra-2026-11-16.md (secciones "Automatizaciones posibles en la 0.24" y "Tiempos de los
+ítems"). Conecta las carpetas software-factory y factory-server. Primero decidir si la revisión del plan se automatiza fuera de
+Mastra (GitHub Action con Opus) o sigue manual. Después, en ramas y una a la vez: Auto-start runs para triage y review, y la regla
+`/plan` que pasa la tarjeta a Planning; cada una probada con un issue de factory-sandbox, midiendo tiempos y costo frente al #27.
+No decidas solo: trae opciones y trade-offs.
 ```
