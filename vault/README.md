@@ -1,7 +1,7 @@
 ---
 tags: [moc, software-factory]
 creado: 2026-09-28
-actualizado: 2026-10-10
+actualizado: 2026-11-16
 ---
 
 # Vault — Agenttic Software Factory
@@ -29,6 +29,7 @@ No se trata de demostrar que un equipo pequeño iguala a uno grande. Se trata de
   - [[consolidacion-2026-10-23]] — investigaciones consolidadas: lecciones de Stripe/Spotify y decisiones A–E
   - [[plan-fabrica-2026-10-24]] — plan desde el 24/10: bloques, dependencias, fechas y criterios de salida
   - [[costo-por-item-2026-11-02]] — costo medido de la Factory (Railway y modelos) y plan para bajar el costo por ítem
+  - [[fase-4-e2b-y-version-de-mastra-2026-11-16]] — fase 4: proveedores de sandbox, E2B, respaldo y comparación de Mastra 0.24 frente a 0.28 (decisiones abiertas)
   - [[diagramas-fabrica]] — diagramas del proceso actual, avance del plan, piezas A–D de ECC y seguridad (Mermaid; versión visual en Claude Design)
   - [[separacion-cc-agenttia]] — punto 3 del 07/11: qué es de CC, qué se entrega y cómo pasa a Agenttia (por decidir)
 - **04 — Plantillas**

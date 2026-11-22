@@ -1,6 +1,6 @@
 ---
 tags: [estado, handoff]
-actualizado: 2026-11-16
+actualizado: 2026-11-22
 ---
 
 # Estado actual — leer primero al iniciar una sesión nueva
@@ -26,7 +26,29 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 | **CC** | Piloto en producción. **3.1 cerrado (07/11):** el runtime despliega por la integración de GitHub con *Wait for CI*: `cc-agent` ← `cc-stage` (PLATFORM-74) y `agent` ← `master` (PLATFORM-75, ADR 039). Producción ya no usa Config as Code. **REQUEST-9 sigue abierto** por el environment `staging` de Agenttia (vence el **2026-12-01**). Congelado 23–28/11 (congreso de EMA): el autodeploy de producción se apaga del 22 al 29/11. REQUEST-10 Done. C (Sentry) sin fecha |
 | **Separación CC / Agenttia** | **Punto 3 en curso.** ADR 040 *Propuesto* (sin commit) con 4 decisiones abiertas. Supabase ya separado por producto (08/11). Repo de Agenttia creado en `Alephart-Co` con la antigua `stage` de CC, rama principal `main` (09/11); su ruleset no se aplica en Free |
 
-**Siguiente — al 16/11 (orden del 07/11, actualizado):**
+**Siguiente — al 22/11 (fase 4 en uso; ver entradas del 21 y 22/11):**
+- **Hecho:** E2B activo (4.1) y respaldo diario a R2 con restauración probada (4.1b). Primer recorrido completo en E2B (#27 → PR #28).
+- **Pendiente de cierre del 22/11:** leer costos del 22/11 (Anthropic y E2B, ver entrada de las 11:40); PR #16 desplegado el 22/11
+  (esa vez llegó la alerta, como se esperaba): comprobar en el redeploy siguiente que ya no llega; *squash* obligatorio solo en los
+  repos de producto (decisión de Juan Carlos, 22/11: en `software-factory` y `factory-sandbox` se decide en cada merge, como hábito); en el próximo ítem, confirmar que el autor del commit ya sale `agenttic-factory[bot]`.
+- **Próxima sesión: bajar las intervenciones humanas sobre la 0.24, para seguir midiendo** (decisión de Juan Carlos, 22/11).
+  Hoy son 6–7 por ítem: Investigate, responder el triage, mover a Planning, lanzar la revisión del plan, Build, lanzar la Review y merge.
+  - **Automatizables en la 0.24:** *Auto-start runs* (arrancan solos el triage y la review del PR de la Factory) y una regla en
+    `issueCommentCreated` que pasa la tarjeta a Planning cuando la respuesta al triage trae `/plan` (responder = aprobar, en un paso).
+  - **Quedan 4, no 3:** responder con `/plan`, lanzar la revisión del plan, Build y merge. La revisión del plan no se automatiza en
+    Mastra porque debe correr con otro modelo (decisión del 22/11) y la 0.24 no deja elegir modelo por etapa.
+  - **Para llegar a 3, opción a decidir al empezar:** que la revisión del plan corra **fuera de Mastra**, en un GitHub Action que se
+    dispara con el comentario del plan, llama a Opus con la skill `factory-plan-review` y publica el veredicto y `plan:aprobado`.
+    A favor: modelo libre y automática. En contra: llave de Anthropic como secreto en GitHub, la skill en dos lugares y un costo
+    aparte del workspace `factory`.
+  - Cada automatización en una rama, una a la vez, probada con un issue de `factory-sandbox`, midiendo tiempos y costo frente al #27.
+- **Después: subir Mastra de la 0.24 a la 0.29** (ítem propio en FACTORY). Leer el changelog 0.25–0.29, rehacer el tablero y el gate
+  `plan:aprobado`, configurar `coAuthor` y probar en local con la base restaurada desde R2 antes de desplegar. Ver
+  [[fase-4-e2b-y-version-de-mastra-2026-11-16]]. Las automatizaciones de la 0.24 se rehacen sobre el mecanismo nuevo.
+- **También:** limpieza periódica de sandboxes pausadas (vía probada: borrar sesiones de tarjetas cerradas desde la Factory; cada ítem
+  deja 2), medir el monorepo y bajar el plazo de E2B si alcanza.
+
+**Siguiente — al 16/11 (orden del 07/11, histórico):**
 1. ~~3.1 de CC en staging y producción~~ **hecho (07/11).** Queda por ver en vivo el primer merge a `master` que toque el runtime.
 2. **Cerrar el punto 3 (separación)** — decisiones, dominio y merges hechos el 16/11; queda el commit del ADR:
    - Hacer commit de lo preparado el 08/11, que está **sin commit en el checkout de CC, hoy en `master`**: ADR 040 y los docs de
@@ -42,6 +64,8 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
    *Wait for CI* como compensación (ADR 037).
 5. **Fase 4 de la Factory: E2B**, con alternativas de costo (en Hobby las sesiones duran máximo 1 h; Pro ~USD 150/mes). Junto con 4.1b
    (respaldo a R2).
+   Incluye la **limpieza periódica de sandboxes pausadas** (pendiente del 16/11) y las decisiones abiertas de
+   [[fase-4-e2b-y-version-de-mastra-2026-11-16]].
 6. **E1 · escáneres de seguridad en CI.**
 7. Cuando el ADR 040 quede aceptado: sacar del vault las notas de producto ([[separacion-cc-agenttia]], [[plan-separacion-infra]])
    y dejar un enlace al ADR (el vault es de la fábrica).
@@ -58,6 +82,124 @@ El historial de sesiones está abajo, de la más nueva a la más vieja.
 **2026-12-01** Railway deja de leer Config as Code. Los recordatorios del 22 y el 29 están en Google Calendar.
 
 **Recordatorios:** revisar *Auto-approve tools* después de cada deploy (el 01/11 siguió activo tras un redeploy; falta confirmar si ahora persiste). *Interaction limits* de `factory-sandbox` vencen el **2027-04-27**. No empujar commits a un PR de la Factory: el builder los revierte (el 02/11 revirtió el segundo commit roto a los 4 s; el primero, ese día y en el #25, no lo revirtió).
+
+## 22/11 (11:40) — primer recorrido completo en E2B: issue #27 → PR #28
+
+Issue chico real (`parseCOP` leía "$2MM" como 2). Horas de Bogotá:
+
+| Hora | Paso | Min |
+|---|---|---|
+| 10:24 | Issue abierto | 0 |
+| 10:25 | Triage | 1 |
+| 10:33 | Respuesta de Juan Carlos (3 decisiones) | 8 |
+| 10:34 | Plan v1 | 10 |
+| 10:39 | Revisión del plan (**Sonnet 5.5**, sesión nueva): APROBAR + `plan:aprobado` | 15 |
+| 10:42 | Build → commit y PR #28 (71 pruebas) | 18 |
+| 10:44 | Review: approve | 20 |
+| 10:50–11:18 | Pausa: PR #15, PR #16, redeploy y caída de GitHub | — |
+| 11:18:00 | Commit de prueba de una persona (rompe 1 prueba) | — |
+| 11:18:29 | Re-review: request changes (29 s) | — |
+| 11:19:29 | Builder corrige (`8dccd56`) y re-review: approve; `factory-verdict` verde, 1 ronda | — |
+| 11:23 | Merge (sin squash, por error) → issue cerrado | 59 |
+
+**Hallazgos:**
+- El flujo en E2B se comporta igual que en local; el agente trabaja en minutos. Sin el tiempo muerto, el ítem habría salido en ~25 min.
+- **Identidad de los commits:** el build falló por falta de identidad git en E2B y el agente se puso `mastra-platform[bot]` por su
+  cuenta. PR #15 (variables `GIT_AUTHOR_*`/`GIT_COMMITTER_*`): el *committer* ya sale `agenttic-factory[bot]`; el *autor* siguió
+  `mastra-platform[bot]` porque el agente lo pasó explícito (probablemente heredado de su primer intento en la misma sesión).
+  Verificar en el próximo ítem con una sesión nueva.
+- **`Co-Authored-By: mastra-platform[bot]`** en los commits: lo pide el prompt base de Mastra y en la 0.24 el nombre está fijo en
+  `factory.js`. Recomendación: aceptarlo por ahora; revisar con la 0.28. **Decisión de Juan Carlos pendiente.**
+- **Merge sin squash** dejó en `main` el commit roto de prueba. Configurar los repos (empezando por `factory-sandbox`) para permitir
+  solo *squash merging*.
+- **Falsa alerta "Deploy Crashed"** en cada redeploy: `pnpm` sale con error cuando Railway detiene el contenedor viejo. PR #16
+  (fusionado, **sin desplegar**): salida 0 en una detención pedida; una caída real sigue saliendo con error. Se verifica en el
+  redeploy siguiente al que lo despliegue.
+- **Sandboxes al cerrar:** 0 corriendo y 2 pausadas (Work y Review); la de la revisión del plan se borró con su sesión. Dato para la limpieza.
+- **Costos: por leer el 23/11.** E2B consolida con retraso (el 22/11 solo mostraba ~13 min, de la verificación de la noche). Estimado
+  E2B del ítem: ~USD 0,30 con plazo de 60 min. Anthropic: el 22/11 UTC incluye la sesión de verificación de las 05:00 UTC (~78 mil
+  tokens de entrada, ~USD 0,32): restarla. Todo el ítem corrió con Sonnet 5.5 (y Haiku de la memoria): no debe aparecer Opus.
+- **Revisión del plan con Sonnet en el #27:** solo para medir tiempos y costos con la 0.24. **Decisión de Juan Carlos (22/11): la
+  revisión del plan la hace Opus u otro modelo distinto al del plan.** Como ni la 0.24 ni la 0.29 permiten elegir modelo por etapa,
+  ese paso sigue manual (sesión nueva con otro modelo); la automatización de "lanzar la revisión del plan" queda descartada por ahora.
+- **Subir Mastra pronto (Juan Carlos):** la estable ya es la **0.29.0 (17/11)**, con `@mastra/core` 1.84.0 y `@mastra/code-sdk` 1.19.1.
+  Trae `coAuthor` configurable (#30485: resuelve el `Co-Authored-By`), descarga de sesiones inactivas de la memoria del servidor y
+  arreglos de reviews repetidas (#30559, #30691). No trae modelo por etapa.
+
+## 22/11 (00:57) — 4.1 activo: la Factory corre en E2B
+
+- PR #14 fusionado y desplegado; en `factory`: `E2B_API_KEY` y sin `FACTORY_SANDBOX_PROVIDER`. Cuenta E2B Hobby (región `us-west-1`).
+- **Verificado con una sesión nueva sobre `factory-sandbox`:** kernel de E2B, 2 vCPU, ~3,9 GB, usuario `user`. Variables en la sandbox:
+  solo las de E2B, `GH_TOKEN` y las del sistema; **ningún secreto del servidor**. La plantilla del repo (`mastra-repo-…`) quedó *Internal*.
+- **Sigue:** recorrido completo con un issue nuevo de `factory-sandbox` (runbook 8.4), midiendo el comando más largo, cuántas sandboxes
+  quedan pausadas y el consumo de E2B. Antes de instalar la App en CC: comprobar a qué repos da acceso el `GH_TOKEN` (cubre toda la
+  instalación de la App, no solo el repo de la sesión).
+
+## 22/11 (00:15) — 4.1b cumplido: respaldo diario a R2 con restauración probada
+
+- Bucket `agenttic-factory-backups` (cuenta actual de Cloudflare) con regla de ciclo de vida: borra `factory/` a los 30 días.
+- Servicio `backup` en el proyecto de Railway de la Factory, cron `0 8 * * *` (03:00 Bogotá), `DATABASE_URL=${{factory.DATABASE_URL}}`
+  (con `${{Postgres.…}}` la referencia no resolvió). Primer respaldo: 2,7 MB, 357 objetos, `pg_dump` 18.7.
+- **Restauración probada (22/11)** con Podman en la Mac de Juan Carlos: 76 tablas; 1 secreto cifrado, descifrado con la llave del gestor.
+- **Para vigilar:** el primer intento de subida a R2 dio `501 NotImplemented` y el reintento entró (rclone 1.60 de Debian). Si se repite,
+  instalar un rclone reciente en `deploy/backup/Dockerfile`. `mastra_schedule_triggers` tiene ~34 mil filas (de lejos la tabla más grande):
+  revisar por qué crece y si hay que limpiarla.
+- **Sigue:** E2B (runbook de Railway, sección 8).
+
+## 21/11 — fase 4 lista para activar: PR #14 de `factory-server`
+
+- **Decidido (16/11, cerrado hoy):** respaldo con servicio cron en el proyecto de Railway, bucket en la cuenta actual de Cloudflare
+  (`agenttic-factory-backups`, retención 30 días) y prueba de restauración en local con Docker.
+- **PR #14** (`factory-11/fase-4-e2b-respaldo`): E2B con 60 min y 4 GB por defecto, `E2B_API_KEY` en `.env.schema`, servicio `backup`
+  (`deploy/backup/`), prueba de restauración que descifra los secretos sin mostrarlos, y runbook de Railway secciones 6 (respaldo) y 8 (E2B).
+  Pruebas del repo en verde; respaldo probado con Postgres local. **Sin probar:** la imagen del servicio `backup` y la subida real a R2.
+- **Lo que sigue (Juan Carlos):** bucket y token de R2 (6.1), servicio `backup` y primera ejecución (6.2), prueba de restauración (6.3),
+  cuenta E2B Hobby (8.1), merge del #14 y cambio de variables (8.2), verificación (8.3) y recorrido con medición (8.4).
+- ~~Hueco: el commit `f04e81f` no llegó a `master`~~ — sí llegó, con el PR #13 (verificado el 22/11).
+
+## 16/11 (22:30) — fase 4: proveedores de sandbox, dos correcciones y versión de Mastra
+
+Detalle, tablas y fuentes en [[fase-4-e2b-y-version-de-mastra-2026-11-16]]. **Solo lectura de código y changelog: nada se cambió ni se probó.**
+
+- **Activar E2B no pide código:** `E2B_API_KEY` en Railway, quitar `FACTORY_SANDBOX_PROVIDER` y redesplegar. El cambio es global
+  (también `factory-sandbox`). Falta declarar `E2B_API_KEY` en `.env.schema`.
+- **Corrección 1:** la llave de Anthropic **no** entra a la sandbox (el agente corre en el servidor; solo se inyecta `GH_TOKEN`).
+  El riesgo real es el `GH_TOKEN`; falta verificar si va acotado al repo.
+- **Corrección 2:** la hora de Hobby es de ejecución continua y se reinicia al pausar; no es por sesión. El riesgo es el plazo
+  (`idleTimeoutMinutes`, 5 por defecto), que no se extiende con la actividad: puede congelar un comando largo. Se mide el comando y el
+  turno más largos, no la sesión.
+- **La 0.24 ya detiene la sandbox al terminar la tarjeta** (Done o Canceled). Entre etapas queda encendida hasta el plazo: centavos por despertar.
+- **Mastra estable es la 0.28.0 (12/11).** Subir rompe el gate `plan:aprobado` y el arranque (`work-board.ts`, `index.ts`), retira el
+  tablero Review, cambia triage, plan y build, y migra la base. No es una sesión: merece su propio ítem, con el respaldo hecho antes.
+- **Decidido (16/11, 22:53):** E2B sobre la 0.24, con la subida a la 0.28 como ítem aparte después del respaldo; primer recorrido con
+  60 min y 4 GB; se sigue con la llave del workspace `factory`; el monorepo se mide después del primer recorrido.
+- **Por hacer (decidido el 16/11): limpieza periódica de sandboxes pausadas.** E2B las conserva sin vencimiento y Mastra solo las
+  destruye al borrar la sesión. Criterio, vía, dónde corre y frecuencia: por definir (sección "Pendiente" de la nota).
+- **Abierta:** respaldo (opción, cuenta de Cloudflare y prueba de restauración). Por definir: el cómo de la limpieza de sandboxes.
+
+## 16/11 (noche) — Agenttia en pausa; la fábrica pasa a CC
+
+- **Decisión de Juan Carlos:** pausar el staging de Agenttia y concentrarse en llevar la Factory a CC. Cambia el plan del 24/10
+  ("la Factory no entra a CC hasta después del primer ítem de Agenttia"): **CC pasa a ser el primer producto**.
+- **Agenttia queda así:** proyecto Railway `agenttia-runtime`, environment `staging`, servicio `agenttia-platform` conectado a
+  `Alephart-Co/agenttia-platform` rama `stage`, con cambios sin aplicar; buckets R2 `agenttia-prod`, `agenttia-staging`,
+  `agenttia-agent-media` (falta `agenttia-agent-media-staging`, tokens por entorno y copiar objetos desde los buckets de CC).
+- **Riesgo aceptado mientras dure la pausa:** el environment `staging` del proyecto Conversion (Agenttia) lee Config as Code y
+  **deja de desplegar el 2026-12-01**. No afecta a CC. Plan B de ~10 min: pasar sus settings al dashboard; REQUEST-9 sigue abierto.
+
+## 16/11 (noche) — orden confirmado: E2B y respaldo primero
+
+- **Juan Carlos:** primero E2B (4.1) y respaldo (4.1b), que sirven a los dos productos; después se elige producto.
+- **La comparativa de aislamiento ya existe** (chat "Comparativa E2B vs exe.dev", 08–09/11; lámina *05 · Aislamiento* del lienzo en
+  Claude Design). No estaba en el vault. Conclusiones: con los datos de la fase 3 (~USD 7 por ítem en tokens), el sandbox casi no pesa
+  en el costo total (USD 7–15/mes a 90 ítems frente a ~USD 630 en tokens); el ahorro está en los tokens. Pesa más el esfuerzo de
+  integración que el precio por hora. exe.dev es más barato por hora y no deja ver las llaves del modelo a la VM, pero no tiene SDK.
+  También se miraron Cloudflare Sandboxes, AWS AgentCore, Azure, GKE Agent Sandbox y Agent37.
+- **Ojo con E2B:** la llave del modelo entra a la sandbox para que Claude Code funcione → llave de Anthropic aparte, con límite de
+  gasto, solo para los runs.
+- **Siguiente:** confirmar qué proveedores soporta la versión de Mastra Factory desplegada (`FACTORY_SANDBOX_PROVIDER=local` hoy;
+  `factory-server` ya trae `@mastra/e2b`); cuenta de E2B Hobby y recorrido en `factory-sandbox`; medir si la hora por sesión alcanza
+  con el monorepo real.
 
 ## 16/11 — ADR 040 aceptado y runtime de CC en `agent.conversionchat.co`
 
@@ -576,7 +718,11 @@ Reemplazado por el plan [[plan-fabrica-2026-10-24]] y por "Siguiente" en "Dónde
 ## Cómo retomar en una conversación nueva
 
 ```
-Retomamos la software factory. Lee ~/Projects/agenttic/software-factory/vault/00-estado-actual.md ("Dónde estamos" y "Siguiente").
-Conecta las carpetas software-factory, conversion-platform y agenttia. Seguimos por el punto que te indique; no decidas solo:
-trae opciones y trade-offs.
+Retomamos la software factory: bajar las intervenciones humanas por ítem sobre Mastra Factory 0.24, para seguir midiendo. Lee
+~/Projects/agenttic/software-factory/vault/00-estado-actual.md ("Siguiente — al 22/11" y las entradas del 21 y 22/11) y
+vault/03-modelo/fase-4-e2b-y-version-de-mastra-2026-11-16.md (secciones "Automatizaciones posibles en la 0.24" y "Tiempos de los
+ítems"). Conecta las carpetas software-factory y factory-server. Primero decidir si la revisión del plan se automatiza fuera de
+Mastra (GitHub Action con Opus) o sigue manual. Después, en ramas y una a la vez: Auto-start runs para triage y review, y la regla
+`/plan` que pasa la tarjeta a Planning; cada una probada con un issue de factory-sandbox, midiendo tiempos y costo frente al #27.
+No decidas solo: trae opciones y trade-offs.
 ```
